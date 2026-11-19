@@ -1,0 +1,72 @@
+// Tia Chớp Bạc (nhân vật 0). Thay từng SVG bằng PNG của bạn bằng cách đổi phần mở rộng src.
+// ms: thời gian của từng frame; width/height: kích thước vẽ; loop bật/tắt lặp.
+window.GAME_ANIMATIONS = {
+ characters: {
+  1: {
+    idle: {frames:[{src:"characters/1/idle_01.png",ms:140},{src:"characters/1/idle_02.png",ms:140},{src:"characters/1/idle_03.png",ms:140},{src:"characters/1/idle_04.png",ms:140},{src:"characters/1/idle_05.png",ms:140},{src:"characters/1/idle_06.png",ms:140}],loop:true,width:64,height:72,offsetY:6},
+    move: {frames:[{src:"characters/1/move_01.png",ms:65},{src:"characters/1/move_02.png",ms:65},{src:"characters/1/move_03.png",ms:65},{src:"characters/1/move_04.png",ms:65},{src:"characters/1/move_05.png",ms:65},{src:"characters/1/move_06.png",ms:65},{src:"characters/1/move_07.png",ms:65},{src:"characters/1/move_08.png",ms:65}],loop:true,width:64,height:72,offsetY:6},
+    jump: {frames:[{src:"characters/1/jump_01.png",ms:70},{src:"characters/1/jump_02.png",ms:90},{src:"characters/1/jump_03.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    fall: {frames:[{src:"characters/1/fall_01.png",ms:90},{src:"characters/1/fall_02.png",ms:90},{src:"characters/1/fall_03.png",ms:110}],loop:true,width:64,height:72,offsetY:6,flip:false},
+    attack: {frames:[{src:"characters/1/attack_01.png",ms:55},{src:"characters/1/attack_02.png",ms:65},{src:"characters/1/attack_03.png",ms:55},{src:"characters/1/attack_04.png",ms:70},{src:"characters/1/attack_05.png",ms:75},{src:"characters/1/attack_06.png",ms:80}],loop:false,width:64,height:72,offsetY:6},
+    skill: {frames:[{src:"characters/1/skill_01.png",ms:80},{src:"characters/1/skill_02.png",ms:85},{src:"characters/1/skill_03.png",ms:95},{src:"characters/1/skill_04.png",ms:110}],loop:false,width:64,height:72,offsetY:6},
+    finisher: {frames:[{src:"characters/1/finisher_01.png",ms:85},{src:"characters/1/finisher_02.png",ms:90},{src:"characters/1/finisher_03.png",ms:105},{src:"characters/1/finisher_04.png",ms:130}],loop:false,width:64,height:72,offsetY:6},
+    dash: {frames:[{src:"characters/1/dash_01.png",ms:50},{src:"characters/1/dash_02.png",ms:50},{src:"characters/1/dash_03.png",ms:50},{src:"characters/1/dash_04.png",ms:50}],loop:true,width:64,height:72,offsetY:6},
+    defeat: {frames:[{src:"characters/1/defeat_01.png",ms:90},{src:"characters/1/defeat_02.png",ms:100},{src:"characters/1/defeat_03.png",ms:110},{src:"characters/1/defeat_04.png",ms:250}],loop:false,width:64,height:72,offsetY:6,flip:false}
+  },
+  1: {
+    idle: {frames:[{src:"characters/1/idle_01.png",ms:140},{src:"characters/1/idle_02.png",ms:140},{src:"characters/1/idle_03.png",ms:140},{src:"characters/1/idle_04.png",ms:140},{src:"characters/1/idle_05.png",ms:140},{src:"characters/1/idle_06.png",ms:140}],loop:true,width:64,height:72,offsetY:6},
+    move: {frames:[{src:"characters/1/move_01.png",ms:65},{src:"characters/1/move_02.png",ms:65},{src:"characters/1/move_03.png",ms:65},{src:"characters/1/move_04.png",ms:65},{src:"characters/1/move_05.png",ms:65},{src:"characters/1/move_06.png",ms:65},{src:"characters/1/move_07.png",ms:65},{src:"characters/1/move_08.png",ms:65}],loop:true,width:64,height:72,offsetY:6},
+    jump: {frames:[{src:"characters/1/jump_01.png",ms:70},{src:"characters/1/jump_02.png",ms:90},{src:"characters/1/jump_03.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    fall: {frames:[{src:"characters/1/fall_01.png",ms:90},{src:"characters/1/fall_02.png",ms:90},{src:"characters/1/fall_03.png",ms:110}],loop:true,width:64,height:72,offsetY:6,flip:false},
+    attack: {frames:[{src:"characters/1/attack_01.png",ms:55},{src:"characters/1/attack_02.png",ms:65},{src:"characters/1/attack_03.png",ms:55},{src:"characters/1/attack_04.png",ms:70},{src:"characters/1/attack_05.png",ms:75},{src:"characters/1/attack_06.png",ms:80}],loop:false,width:64,height:72,offsetY:6},
+    skill: {frames:[{src:"characters/1/skill_01.png",ms:80},{src:"characters/1/skill_02.png",ms:85},{src:"characters/1/skill_03.png",ms:95},{src:"characters/1/skill_04.png",ms:110}],loop:false,width:64,height:72,offsetY:6},
+    finisher: {frames:[{src:"characters/1/finisher_01.png",ms:85},{src:"characters/1/finisher_02.png",ms:90},{src:"characters/1/finisher_03.png",ms:105},{src:"characters/1/finisher_04.png",ms:130}],loop:false,width:64,height:72,offsetY:6},
+    dash: {frames:[{src:"characters/1/dash_01.png",ms:50},{src:"characters/1/dash_02.png",ms:50},{src:"characters/1/dash_03.png",ms:50},{src:"characters/1/dash_04.png",ms:50}],loop:true,width:64,height:72,offsetY:6},
+    defeat: {frames:[{src:"characters/1/defeat_01.png",ms:90},{src:"characters/1/defeat_02.png",ms:100},{src:"characters/1/defeat_03.png",ms:110},{src:"characters/1/defeat_04.png",ms:250}],loop:false,width:64,height:72,offsetY:6,flip:false}
+  },
+  1: {
+    idle: {frames:[{src:"characters/1/idle_01.png",ms:240},{src:"characters/1/idle_02.png",ms:240}],loop:true,width:64,height:72,offsetY:6},
+    move: {frames:[{src:"characters/1/move_01.png",ms:95},{src:"characters/1/move_02.png",ms:95},{src:"characters/1/move_03.png",ms:95},{src:"characters/1/move_04.png",ms:95}],loop:true,width:64,height:72,offsetY:6},
+    jump: {frames:[{src:"characters/1/jump_01.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    fall: {frames:[{src:"characters/1/fall_01.png",ms:160}],loop:true,width:64,height:72,offsetY:6,flip:false},
+    attack: {frames:[{src:"characters/1/attack_01.png",ms:75},{src:"characters/1/attack_02.png",ms:75},{src:"characters/1/attack_03.png",ms:110}],loop:false,width:64,height:72,offsetY:6},
+    skill: {frames:[{src:"characters/1/skill_01.png",ms:110},{src:"characters/1/skill_02.png",ms:100},{src:"characters/1/skill_03.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    finisher: {frames:[{src:"characters/1/finisher_01.png",ms:110},{src:"characters/1/finisher_02.png",ms:90},{src:"characters/1/finisher_03.png",ms:160}],loop:false,width:64,height:72,offsetY:6},
+    dash: {frames:[{src:"characters/1/dash_01.png",ms:70},{src:"characters/1/dash_02.png",ms:70}],loop:true,width:64,height:72,offsetY:6},
+    defeat: {frames:[{src:"characters/1/defeat_01.png",ms:200}],loop:false,width:64,height:72,offsetY:6,flip:false}
+  },
+  3: {
+    idle: {frames:[{src:"characters/3/idle_01.png",ms:240},{src:"characters/3/idle_02.png",ms:240}],loop:true,width:64,height:72,offsetY:6},
+    move: {frames:[{src:"characters/3/move_01.png",ms:95},{src:"characters/3/move_02.png",ms:95},{src:"characters/3/move_03.png",ms:95},{src:"characters/3/move_04.png",ms:95}],loop:true,width:64,height:72,offsetY:6},
+    jump: {frames:[{src:"characters/3/jump_01.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    fall: {frames:[{src:"characters/3/fall_01.png",ms:160}],loop:true,width:64,height:72,offsetY:6,flip:false},
+    attack: {frames:[{src:"characters/3/attack_01.png",ms:75},{src:"characters/3/attack_02.png",ms:75},{src:"characters/3/attack_03.png",ms:110}],loop:false,width:64,height:72,offsetY:6},
+    skill: {frames:[{src:"characters/3/skill_01.png",ms:110},{src:"characters/3/skill_02.png",ms:100},{src:"characters/3/skill_03.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    finisher: {frames:[{src:"characters/3/finisher_01.png",ms:110},{src:"characters/3/finisher_02.png",ms:90},{src:"characters/3/finisher_03.png",ms:160}],loop:false,width:64,height:72,offsetY:6},
+    dash: {frames:[{src:"characters/3/dash_01.png",ms:70},{src:"characters/3/dash_02.png",ms:70}],loop:true,width:64,height:72,offsetY:6},
+    defeat: {frames:[{src:"characters/3/defeat_01.png",ms:200}],loop:false,width:64,height:72,offsetY:6,flip:false}
+  },
+  0: {
+    idle: {frames:[{src:"characters/0/idle_01.png",ms:240},{src:"characters/0/idle_02.png",ms:240}],loop:true,width:64,height:72,offsetY:6},
+    move: {frames:[{src:"characters/0/move_01.png",ms:95},{src:"characters/0/move_02.png",ms:95},{src:"characters/0/move_03.png",ms:95},{src:"characters/0/move_04.png",ms:95}],loop:true,width:64,height:72,offsetY:6},
+    jump: {frames:[{src:"characters/0/jump_01.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    fall: {frames:[{src:"characters/0/fall_01.png",ms:160}],loop:true,width:64,height:72,offsetY:6,flip:false},
+    attack: {frames:[{src:"characters/0/attack_01.png",ms:75},{src:"characters/0/attack_02.png",ms:75},{src:"characters/0/attack_03.png",ms:110}],loop:false,width:64,height:72,offsetY:6},
+    skill: {frames:[{src:"characters/0/skill_01.png",ms:110},{src:"characters/0/skill_02.png",ms:100},{src:"characters/0/skill_03.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    finisher: {frames:[{src:"characters/0/finisher_01.png",ms:110},{src:"characters/0/finisher_02.png",ms:90},{src:"characters/0/finisher_03.png",ms:160}],loop:false,width:64,height:72,offsetY:6},
+    dash: {frames:[{src:"characters/0/dash_01.png",ms:70},{src:"characters/0/dash_02.png",ms:70}],loop:true,width:64,height:72,offsetY:6},
+    defeat: {frames:[{src:"characters/0/defeat_01.png",ms:200}],loop:false,width:64,height:72,offsetY:6,flip:false}
+  }
+ },
+ projectiles: {
+  darkorb: {frames:[{src:"effects/dark_king/dark_orb_01.png",ms:65},{src:"effects/dark_king/dark_orb_02.png",ms:65},{src:"effects/dark_king/dark_orb_03.png",ms:65},{src:"effects/dark_king/dark_orb_04.png",ms:65}],loop:true,width:36,height:36,anchorX:0.5,anchorY:0.5},
+  silverbird: {frames:[{src:"effects/silver_bird_01.png",ms:75},{src:"effects/silver_bird_02.png",ms:75},{src:"effects/silver_bird_03.png",ms:75},{src:"effects/silver_bird_04.png",ms:75}],loop:true,width:42,height:32,anchorX:0.5,anchorY:0.5}
+ },
+ effects: {
+  darkSlash: {frames:[{src:"effects/dark_king/dark_slash_01.png",ms:45},{src:"effects/dark_king/dark_slash_02.png",ms:45},{src:"effects/dark_king/dark_slash_03.png",ms:45},{src:"effects/dark_king/dark_slash_04.png",ms:45}],loop:false,width:76,height:76,anchorX:0.45,anchorY:0.5},
+  darkVortex: {frames:[{src:"effects/dark_king/dark_vortex_01.png",ms:75},{src:"effects/dark_king/dark_vortex_02.png",ms:75},{src:"effects/dark_king/dark_vortex_03.png",ms:75},{src:"effects/dark_king/dark_vortex_04.png",ms:75}],loop:true,width:96,height:96,anchorX:0.5,anchorY:0.78},
+  darkOrbImpact: {frames:[{src:"effects/dark_king/dark_impact_01.png",ms:55},{src:"effects/dark_king/dark_impact_02.png",ms:55},{src:"effects/dark_king/dark_impact_03.png",ms:55},{src:"effects/dark_king/dark_impact_04.png",ms:55}],loop:false,width:72,height:72,anchorX:0.5,anchorY:0.5},
+  silverBirdCutin: {frames:[{src:"effects/silver_bird_cutin/frame_001.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_002.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_003.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_004.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_005.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_006.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_007.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_008.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_009.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_010.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_011.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_012.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_013.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_014.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_015.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_016.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_017.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_018.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_019.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_020.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_021.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_022.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_023.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_024.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_025.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_026.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_027.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_028.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_029.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_030.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_031.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_032.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_033.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_034.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_035.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_036.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_037.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_038.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_039.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_040.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_041.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_042.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_043.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_044.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_045.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_046.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_047.png",ms:62.5},{src:"effects/silver_bird_cutin/frame_048.png",ms:62.5}],loop:false,width:480,height:300,anchorX:0.5,anchorY:0},
+  silverStrike: {frames:[{src:"effects/silver_strike_01.png",ms:65},{src:"effects/silver_strike_02.png",ms:65},{src:"effects/silver_strike_03.png",ms:65},{src:"effects/silver_strike_04.png",ms:65}],loop:false,width:96,height:300,anchorX:0.5,anchorY:1}
+ }
+};
