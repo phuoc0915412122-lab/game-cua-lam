@@ -328,29 +328,33 @@ function drawFirePellet(x,y,vx,vy,awakened=false){
 function drawEpicFireTornadoVfx(e,a){
  ctx.save();
  const k=1-a,sc=e.scale||(e.awakened?1.65:1.25),awakened=!!e.awakened;
- const h=(62+(1-k)*155)*sc,r=(22+(1-k)*42)*sc;
- // 1. Dark cracked volcanic rock debris & scorched black base crater (Video 3!)
- ctx.globalAlpha=Math.min(1,a*1.15);
+ // Erupt explosively UPWARD from the ground (0 -> full height during first 28% of life!)
+ const rise=Math.min(1,k/0.28),easeRise=1-Math.pow(1-rise,3);
+ const fade=a<0.25?a/0.25:1;
+ const h=(10+easeRise*205)*sc,r=(12+easeRise*50)*sc;
+ ctx.globalAlpha=Math.min(1,fade*1.15);
+ // 1. Ground crack & volcanic rock chunks bursting upward from the floor!
  ctx.fillStyle='#12090cd9';
- ctx.beginPath();ctx.ellipse(e.x,e.y+2,r*1.35,13*sc,0,0,Math.PI*2);ctx.fill();
+ ctx.beginPath();ctx.ellipse(e.x,e.y+2,r*1.3,12*sc,0,0,Math.PI*2);ctx.fill();
  for(let i=0;i<6;i++){
-  const rx=e.x+((i-2.5)*16)*sc,ry=e.y+(i%2?2:-2);
+  const rx=e.x+((i-2.5)*15)*sc,lift=Math.sin(Math.min(1,k*2.2)*Math.PI)*(10+(i%3)*12)*sc;
+  const ry=e.y+(i%2?2:-2)-lift;
   ctx.fillStyle=i%2?'#292026':'#181116';
-  ctx.fillRect(Math.round(rx-6*sc),Math.round(ry-4*sc),Math.round(12*sc),Math.round(7*sc));
+  ctx.fillRect(Math.round(rx-5*sc),Math.round(ry-4*sc),Math.round(10*sc),Math.round(7*sc));
  }
- // 2. Swirling pitch-black volcanic smoke & charred fire bands interwoven with Red/Orange/Yellow!
- for(let i=0;i<11;i++){
-  const t=i/10,yy=e.y-t*h,rr=(r*(0.32+t*0.95))*(0.86+0.14*Math.sin(clock*22+i));
-  const swX=e.x+Math.sin(clock*12+i*1.35)*11*sc;
-  // Charred black smoke ribbon behind each fire ring
-  ctx.strokeStyle='#14080acc';ctx.lineWidth=(8.5-t*3.2)*sc;
-  ctx.beginPath();ctx.ellipse(swX-3,yy+2,rr*1.06,9*sc,Math.sin(clock*6+i)*0.22,0,Math.PI*2);ctx.stroke();
-  // Blazing Red / Orange / Yellow tornado rings
+ // 2. Swirling Red/Orange/Yellow + Charred Black tornado rings shooting up from ground!
+ const ringCount=Math.max(2,Math.round(11*easeRise));
+ for(let i=0;i<ringCount;i++){
+  const t=i/Math.max(1,ringCount-1),yy=e.y-t*h;
+  const rr=(r*(0.28+t*0.95))*(0.86+0.14*Math.sin(clock*22+i));
+  const swX=e.x+Math.sin(clock*13+i*1.35)*11*sc;
+  ctx.strokeStyle='#14080acc';ctx.lineWidth=(8.5-t*3.0)*sc;
+  ctx.beginPath();ctx.ellipse(swX-3,yy+2,rr*1.06,8.5*sc,Math.sin(clock*6+i)*0.22,0,Math.PI*2);ctx.stroke();
   ctx.strokeStyle=awakened?(i%3===0?'#38bdf8':i%2?'#e83b50':'#ff9933'):(i%3===0?'#ffe542':i%2?'#ff6f14':'#d91e14');
-  ctx.lineWidth=(6.2-t*2.4)*sc;
-  ctx.beginPath();ctx.ellipse(swX,yy,rr,8*sc,Math.sin(clock*6+i)*0.22,0,Math.PI*2);ctx.stroke();
+  ctx.lineWidth=(6.2-t*2.2)*sc;
+  ctx.beginPath();ctx.ellipse(swX,yy,rr,7.8*sc,Math.sin(clock*6+i)*0.22,0,Math.PI*2);ctx.stroke();
  }
- // 3. Blazing central yellow-orange fire core + flying black/orange embers
+ // 3. Rising central yellow-orange fire core column + top crown expanding as it shoots up
  ctx.globalCompositeOperation='lighter';
  const pg=ctx.createLinearGradient(e.x-18*sc,0,e.x+18*sc,0);
  pg.addColorStop(0,'rgba(0,0,0,0)');
@@ -359,14 +363,15 @@ function drawEpicFireTornadoVfx(e,a){
  pg.addColorStop(0.72,'rgba(255,115,20,0.65)');
  pg.addColorStop(1,'rgba(0,0,0,0)');
  ctx.fillStyle=pg;ctx.fillRect(e.x-18*sc,e.y-h,36*sc,h);
- // Wide billowing yellow-orange fire crown at the top of the tornado (Video 3 00:10!)
- const cg=ctx.createRadialGradient(e.x,e.y-h*0.85,4,e.x,e.y-h*0.85,r*1.15);
- cg.addColorStop(0,'rgba(255,245,140,0.9)');cg.addColorStop(0.5,'rgba(255,110,20,0.65)');cg.addColorStop(1,'rgba(200,25,15,0)');
- ctx.fillStyle=cg;ctx.beginPath();ctx.ellipse(e.x,e.y-h*0.85,r*1.25,18*sc,0,0,Math.PI*2);ctx.fill();
+ if(easeRise>0.35){
+  const cg=ctx.createRadialGradient(e.x,e.y-h*0.9,4,e.x,e.y-h*0.9,r*1.15);
+  cg.addColorStop(0,'rgba(255,245,140,0.9)');cg.addColorStop(0.5,'rgba(255,110,20,0.65)');cg.addColorStop(1,'rgba(200,25,15,0)');
+  ctx.fillStyle=cg;ctx.beginPath();ctx.ellipse(e.x,e.y-h*0.9,r*1.2,17*sc,0,0,Math.PI*2);ctx.fill();
+ }
  ctx.globalCompositeOperation='source-over';
  for(let i=0;i<18;i++){
-  const q=clock*10+i*Math.PI/9,rr=12+((i*17+k*45)%(r*1.35));
-  const ey=e.y-((clock*120+i*23)%h);
+  const q=clock*10+i*Math.PI/9,rr=10+((i*17+k*45)%(r*1.3+1));
+  const ey=e.y-((clock*130+i*23)%Math.max(12,h));
   ctx.fillStyle=i%4===0?'#14080a':i%3===0?'#ffe542':i%2?'#ff6e14':'#d91e14';
   ctx.fillRect(Math.round(e.x+Math.cos(q)*rr),Math.round(ey),3,4);
  }
@@ -374,34 +379,38 @@ function drawEpicFireTornadoVfx(e,a){
 }
 function drawEpicFireBeamVfx(e,a){
  ctx.save();
- const ang=Math.atan2(e.dirY||0,e.dirX||1),len=e.range||290,awakened=!!e.awakened;
+ const k=1-a,ang=Math.atan2(e.dirY||0,e.dirX||1),fullLen=e.range||290,awakened=!!e.awakened;
+ // Spray/jet outward from player's hand toward enemy (0 -> fullLen in first 30% of life!)
+ const shoot=Math.min(1,k/0.30),easeShoot=1-Math.pow(1-shoot,2.4);
+ const len=Math.max(18,fullLen*easeShoot);
+ const fade=a<0.28?a/0.28:1;
+ const w=(awakened?50:38)*fade+6;
  ctx.translate(e.x,e.y);ctx.rotate(ang);
- const w=(awakened?52:40)*a+8;
- // 1. Outer charred jet-black smoke & dark crimson aura enveloping the beam (Video 1 & 2!)
- ctx.globalAlpha=Math.min(1,a*1.15);
- ctx.fillStyle='#120709cc';ctx.fillRect(-4,-w*0.66,len+14,w*1.32);
- // Jagged black smoke licks bursting along the beam edges
- for(let x=14;x<len;x+=24){
-  const off=Math.sin(clock*22+x)*6;
+ ctx.globalAlpha=Math.min(1,fade*1.15);
+ // 1. Outer charred jet-black smoke & dark crimson envelope extending from player to current front tip
+ ctx.fillStyle='#120709cc';ctx.fillRect(0,-w*0.64,len+10,w*1.28);
+ for(let x=12;x<len;x+=22){
+  const off=Math.sin(clock*24+x)*5;
   ctx.fillStyle='#14080ad9';
-  ctx.beginPath();ctx.arc(x,-w*0.52+off,8*a+2,0,Math.PI*2);ctx.arc(x+10,w*0.52-off,8*a+2,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x,-w*0.5+off,7.5*fade+2,0,Math.PI*2);ctx.arc(x+9,w*0.5-off,7.5*fade+2,0,Math.PI*2);ctx.fill();
  }
- // 2. Blazing Red -> Orange -> Golden Yellow -> White-Hot Core Beam
- ctx.fillStyle=awakened?'#d92644':'#d61d12';ctx.fillRect(0,-w*0.5,len,w);
- ctx.fillStyle=awakened?'#ff5c33':'#ff7315';ctx.fillRect(4,-w*0.35,len-6,w*0.7);
- ctx.fillStyle='#ffe138';ctx.fillRect(8,-w*0.2,len-14,w*0.4);
- ctx.fillStyle='#fffbe0';ctx.fillRect(10,-w*0.09,len-18,w*0.18);
- // 3. Roaring flame rings & sinusoidal fire ribbons twisting along the beam
- ctx.strokeStyle='#14080acc';ctx.lineWidth=4*a;
- ctx.beginPath();for(let x=0;x<=len;x+=12){const y=Math.sin(x*0.06-clock*28)*(w*0.52);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
- ctx.strokeStyle='#ffe138';ctx.lineWidth=3*a;
- ctx.beginPath();for(let x=0;x<=len;x+=12){const y=Math.sin(x*0.06-clock*28+Math.PI)*(w*0.44);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
- // 4. Origin blast rings & huge fiery black-red-yellow impact fireball at beam tip!
- ctx.strokeStyle='#ff7315';ctx.lineWidth=3*a;ctx.beginPath();ctx.ellipse(8,0,6,w*0.68,0,0,Math.PI*2);ctx.stroke();
- ctx.fillStyle='#14080acc';ctx.beginPath();ctx.arc(len,0,w*0.75,0,Math.PI*2);ctx.fill();
- ctx.fillStyle='#e62912';ctx.beginPath();ctx.arc(len,0,w*0.58,0,Math.PI*2);ctx.fill();
- ctx.fillStyle='#ff851b';ctx.beginPath();ctx.arc(len,0,w*0.4,0,Math.PI*2);ctx.fill();
- ctx.fillStyle='#fff394';ctx.beginPath();ctx.arc(len,0,w*0.22,0,Math.PI*2);ctx.fill();
+ // 2. Blazing Red -> Orange -> Golden Yellow -> White-Hot Core spraying forward
+ ctx.fillStyle=awakened?'#d92644':'#d61d12';ctx.fillRect(0,-w*0.48,len,w*0.96);
+ ctx.fillStyle=awakened?'#ff5c33':'#ff7315';ctx.fillRect(2,-w*0.34,Math.max(4,len-4),w*0.68);
+ ctx.fillStyle='#ffe138';ctx.fillRect(4,-w*0.19,Math.max(4,len-8),w*0.38);
+ ctx.fillStyle='#fffbe0';ctx.fillRect(6,-w*0.08,Math.max(4,len-12),w*0.16);
+ // 3. Roaring sinusoidal black & yellow fire ribbons flowing outward from player!
+ ctx.strokeStyle='#14080acc';ctx.lineWidth=3.8*fade;
+ ctx.beginPath();for(let x=0;x<=len;x+=10){const y=Math.sin(x*0.065-clock*32)*(w*0.5);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
+ ctx.strokeStyle='#ffe138';ctx.lineWidth=2.8*fade;
+ ctx.beginPath();for(let x=0;x<=len;x+=10){const y=Math.sin(x*0.065-clock*32+Math.PI)*(w*0.42);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
+ // 4. Nozzle blast ring at player's fist + Leading Fireball Head bursting outward!
+ ctx.strokeStyle='#ff7315';ctx.lineWidth=3*fade;ctx.beginPath();ctx.ellipse(6,0,5,w*0.66,0,0,Math.PI*2);ctx.stroke();
+ const headR=w*(shoot>=1?0.85:0.65);
+ ctx.fillStyle='#14080acc';ctx.beginPath();ctx.arc(len,0,headR,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#e62912';ctx.beginPath();ctx.arc(len,0,headR*0.78,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#ff851b';ctx.beginPath();ctx.arc(len,0,headR*0.56,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#fff394';ctx.beginPath();ctx.arc(len,0,headR*0.32,0,Math.PI*2);ctx.fill();
  ctx.restore();
 }
 function drawEpicFireAwakenVfx(e,a){
