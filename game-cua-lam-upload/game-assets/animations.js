@@ -35,6 +35,18 @@ window.GAME_ANIMATIONS = {
     dash: {frames:[{src:"characters/1/dash_01.png",ms:70},{src:"characters/1/dash_02.png",ms:70}],loop:true,width:64,height:72,offsetY:6},
     defeat: {frames:[{src:"characters/1/defeat_01.png",ms:200}],loop:false,width:64,height:72,offsetY:6,flip:false}
   },
+  2: {
+    idle: {frames:[{src:"characters/2/idle_01.png",ms:135},{src:"characters/2/idle_02.png",ms:135},{src:"characters/2/idle_03.png",ms:135},{src:"characters/2/idle_04.png",ms:135},{src:"characters/2/idle_05.png",ms:135},{src:"characters/2/idle_06.png",ms:135}],loop:true,width:64,height:72,offsetY:6},
+    move: {frames:[{src:"characters/2/move_01.png",ms:65},{src:"characters/2/move_02.png",ms:65},{src:"characters/2/move_03.png",ms:65},{src:"characters/2/move_04.png",ms:65},{src:"characters/2/move_05.png",ms:65},{src:"characters/2/move_06.png",ms:65},{src:"characters/2/move_07.png",ms:65},{src:"characters/2/move_08.png",ms:65}],loop:true,width:64,height:72,offsetY:6},
+    jump: {frames:[{src:"characters/2/jump_01.png",ms:65},{src:"characters/2/jump_02.png",ms:90},{src:"characters/2/jump_03.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
+    fall: {frames:[{src:"characters/2/fall_01.png",ms:90},{src:"characters/2/fall_02.png",ms:90},{src:"characters/2/fall_03.png",ms:110}],loop:true,width:64,height:72,offsetY:6,flip:false},
+    attack: {frames:[{src:"characters/2/attack_01.png",ms:55},{src:"characters/2/attack_02.png",ms:65},{src:"characters/2/attack_03.png",ms:55},{src:"characters/2/attack_04.png",ms:65},{src:"characters/2/attack_05.png",ms:75},{src:"characters/2/attack_06.png",ms:75}],loop:false,width:64,height:72,offsetY:6},
+    skill: {frames:[{src:"characters/2/skill_01.png",ms:80},{src:"characters/2/skill_02.png",ms:85},{src:"characters/2/skill_03.png",ms:95},{src:"characters/2/skill_04.png",ms:110}],loop:false,width:64,height:72,offsetY:6},
+    finisher: {frames:[{src:"characters/2/finisher_01.png",ms:85},{src:"characters/2/finisher_02.png",ms:90},{src:"characters/2/finisher_03.png",ms:105},{src:"characters/2/finisher_04.png",ms:130}],loop:false,width:64,height:72,offsetY:6},
+    dash: {frames:[{src:"characters/2/dash_01.png",ms:50},{src:"characters/2/dash_02.png",ms:50},{src:"characters/2/dash_03.png",ms:50},{src:"characters/2/dash_04.png",ms:50}],loop:true,width:64,height:72,offsetY:6},
+    hit: {frames:[{src:"characters/2/hit_01.png",ms:80},{src:"characters/2/hit_02.png",ms:100}],loop:false,width:64,height:72,offsetY:6},
+    defeat: {frames:[{src:"characters/2/defeat_01.png",ms:90},{src:"characters/2/defeat_02.png",ms:100},{src:"characters/2/defeat_03.png",ms:110},{src:"characters/2/defeat_04.png",ms:250}],loop:false,width:64,height:72,offsetY:6,flip:false}
+  },
   3: {
     idle: {frames:[{src:"characters/3/idle_01.png",ms:240},{src:"characters/3/idle_02.png",ms:240}],loop:true,width:64,height:72,offsetY:6},
     move: {frames:[{src:"characters/3/move_01.png",ms:95},{src:"characters/3/move_02.png",ms:95},{src:"characters/3/move_03.png",ms:95},{src:"characters/3/move_04.png",ms:95}],loop:true,width:64,height:72,offsetY:6},
