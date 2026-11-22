@@ -545,10 +545,202 @@ function drawHpBar(p,x,y,w,h,color){const ratio=Math.max(0,Math.min(1,p.hp/p.max
 function uiBars(){if(!game)return;const [a,b]=game.players;for(let i=0;i<2;i++){const p=game.players[i],left=i===0?14:480-174,w=160;panel(left,8,w,27);text(i===0?'P1':'P2',left+6,15,8,i===0?'#ffb158':'#8ceeff');text(chars[p.char].name,left+28,15,7,'#fff');drawHpBar(p,left+6,21,w-12,7,i===0?'#ec4b43':'#e7ad3b');rect(left+6,30,w-12,3,'#172433');rect(left+6,30,(w-12)*p.mp/p.maxMp,3,'#4cd9ff')}
  const seconds=Math.max(0,Math.ceil(game.time)),timer=('0'+Math.floor(seconds/60)).slice(-2)+':'+('0'+(seconds%60)).slice(-2);panel(175,5,130,39);text(timer,240,19,12,'#ffd878','center');if(pvpSet&&!training)text('HIỆP '+(game.round||pvpSet.round)+'     '+pvpSet.score[0]+'  -  '+pvpSet.score[1],240,34,8,'#b8e9f2','center');drawAdminQuickToggle()}
 function finishIntro(){if(introFinished)return;introFinished=true;screen='menu';menuIndex=1;loadingScreen={phase:'opening',openElapsed:0,mode:'home',welcome:true}}
-function drawIntro(){const t=introTime,progress=Math.min(1,t/3.2),split=240+Math.sin(t*1.4)*12;const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#100d27');g.addColorStop(.52,'#24203a');g.addColorStop(1,'#382018');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.save();ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(split+26,0);ctx.lineTo(split-42,H);ctx.lineTo(0,H);ctx.closePath();ctx.fillStyle='#583a9a';ctx.globalAlpha=.54;ctx.fill();ctx.beginPath();ctx.moveTo(W,0);ctx.lineTo(split+26,0);ctx.lineTo(split-42,H);ctx.lineTo(W,H);ctx.closePath();ctx.fillStyle='#b55431';ctx.fill();ctx.globalAlpha=1;for(let i=0;i<52;i++){const x=(i*97+Math.sin(t*2+i)*17)%W,y=(i*53+t*(12+i%5)*9)%H;ctx.fillStyle=i%2?'#b898ff':'#ffb35e';ctx.globalAlpha=.25+((i*7)%7)*.08;ctx.fillRect(x,y,2+(i%3),2+(i%2))}ctx.globalAlpha=1;rect(27,27,426,246,'#111522dd');rect(27,27,426,3,'#ff8d47');rect(27,270,426,3,'#aa5361');text('SHINOBI  ×  SOUL REAPER',240,73,19,'#ff9a4c','center');text('PIXEL ARENA',240,92,8,'#bbecf3','center');const left={x:157,y:211,char:0,face:1,vx:0},right={x:323,y:211,char:2,face:-1,vx:0};ctx.globalAlpha=.35;drawFighter(left);drawFighter(right);ctx.globalAlpha=1;for(let i=0;i<8;i++){const x=240+Math.sin(t*2+i)*((i*11)%57),y=121+i*12;rect(x,y,2,5,i%2?'#7fe5e1':'#ffd07a')}text(t<2.8?'ĐANG NẠP ĐẤU TRƯỜNG':'SẴN SÀNG CHIẾN ĐẤU',240,239,7,'#f4e8d6','center');rect(125,248,230,5,'#292638');rect(125,248,230*progress,5,'#ff964b');text('NHẤN PHÍM ĐỂ BỎ QUA',240,263,5,'#aeb8c9','center');ctx.restore()}
-function drawMenu(){drawStage();rect(0,0,W,H,'#080b18a8');panel(24,25,432,252);text('SHINOBI  ×  SOUL REAPER',240,55,22,'#ff8d3a','center');text('PIXEL ARENA  ·  LOCAL FIGHTING PROTOTYPE',240,75,8,'#a9dced','center');rect(73,93,334,2,'#cc573d');
- for(let i=0;i<menuItems.length;i++){const y=111+i*23,active=i===menuIndex;rect(119,y-9,242,18,active?'#6c2d30':'#222535');if(active){rect(119,y-9,4,18,'#ff8735');text('▶',130,y,8,'#ffd27a')}text(menuItems[i],240,y,10,active?'#fff0d0':'#aeb7c8','center')}
- text('P1: W A S D · J/K/I/U/O/L     P2: PHÍM MŨI TÊN · NUMPAD',240,279,6.5,'#92cad3','center');if(adminModActive)text('ADMIN MOD: ON',240,267,7,'#ff626b','center')}
+function drawEpicArenaBackdrop(t,splitShift=0){
+ // 1. Deep Cosmic Eclipse Sky
+ const sky=ctx.createLinearGradient(0,0,W,H);
+ sky.addColorStop(0,'#090518');
+ sky.addColorStop(.38,'#1b0b2e');
+ sky.addColorStop(.68,'#2c1026');
+ sky.addColorStop(1,'#140710');
+ ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+
+ // 2. Giant Glowing Eclipse Moon in center-top
+ const pulse=.5+.5*Math.sin(t*2.4);
+ ctx.save();
+ const moonG=ctx.createRadialGradient(240,118,16,240,118,118);
+ moonG.addColorStop(0,'rgba(255,230,190,0.92)');
+ moonG.addColorStop(0.24,'rgba(255,120,76,0.52)');
+ moonG.addColorStop(0.55,'rgba(147,51,234,0.22)');
+ moonG.addColorStop(1,'rgba(0,0,0,0)');
+ ctx.fillStyle=moonG;ctx.beginPath();ctx.arc(240,118,118,0,Math.PI*2);ctx.fill();
+ // Eclipse dark core + fiery solar corona ring
+ ctx.fillStyle='#0c0618';ctx.beginPath();ctx.arc(240,118,34,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle='#ffb454';ctx.lineWidth=2.5;ctx.shadowColor='#ff6b35';ctx.shadowBlur=16;
+ ctx.beginPath();ctx.arc(240,118,35+pulse*1.5,0,Math.PI*2);ctx.stroke();
+ ctx.shadowBlur=0;
+
+ // 3. Distant Pagoda & Gothic Spire Silhouettes (Shinobi x Soul Reaper)
+ ctx.fillStyle='#0a0616';
+ // Left Gothic Citadel Spires
+ ctx.beginPath();ctx.moveTo(0,248);ctx.lineTo(0,152);ctx.lineTo(18,128);ctx.lineTo(36,152);ctx.lineTo(54,140);ctx.lineTo(74,108);ctx.lineTo(94,140);ctx.lineTo(118,168);ctx.lineTo(148,185);ctx.lineTo(148,248);ctx.closePath();ctx.fill();
+ // Right Shinobi Torii & Pagoda Roofs
+ ctx.beginPath();ctx.moveTo(W,248);ctx.lineTo(W,155);ctx.lineTo(448,142);ctx.lineTo(436,122);ctx.lineTo(408,136);ctx.lineTo(386,112);ctx.lineTo(362,136);ctx.lineTo(344,162);ctx.lineTo(324,185);ctx.lineTo(324,248);ctx.closePath();ctx.fill();
+
+ // 4. Diagonal Dual-Faction Energy Clash (Purple-Cyan Soul Reaper vs Crimson-Gold Shinobi)
+ const split=240+splitShift+Math.sin(t*1.6)*10;
+ ctx.globalCompositeOperation='lighter';
+ const leftG=ctx.createLinearGradient(0,0,split,H);
+ leftG.addColorStop(0,'rgba(124,45,235,0.28)');
+ leftG.addColorStop(1,'rgba(56,189,248,0.06)');
+ ctx.fillStyle=leftG;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(split+34,0);ctx.lineTo(split-46,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();
+
+ const rightG=ctx.createLinearGradient(W,0,split,H);
+ rightG.addColorStop(0,'rgba(249,115,22,0.28)');
+ rightG.addColorStop(1,'rgba(225,29,72,0.08)');
+ ctx.fillStyle=rightG;ctx.beginPath();ctx.moveTo(W,0);ctx.lineTo(split+34,0);ctx.lineTo(split-46,H);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
+
+ // Crackling Energy Rift Seam down the center
+ ctx.strokeStyle='rgba(255,220,150,0.45)';ctx.lineWidth=2;
+ ctx.beginPath();ctx.moveTo(split+34,0);
+ for(let i=1;i<=8;i++){const f=i/8;ctx.lineTo(split+34-f*80+Math.sin(t*14+i*3)*5,f*H)}
+ ctx.stroke();
+
+ // 5. Volumetric Speed Rays & Rising Embers / Electric Sparks
+ for(let i=0;i<36;i++){
+  const leftSide=i%2===0;
+  const ex=(leftSide?((i*41+t*14)%245):(235+(i*47-t*14+245)%245));
+  const ey=(H-((t*(18+(i%5)*9)+i*29)%H));
+  const sz=(i%3===0)?3:2;
+  ctx.fillStyle=leftSide?(i%4===0?'#7cf3ff':'#c084fc'):(i%4===1?'#ffd24c':'#fb7185');
+  ctx.globalAlpha=0.35+0.45*Math.sin(t*5+i);
+  ctx.fillRect(Math.round(ex),Math.round(ey),sz,sz);
+ }
+ ctx.globalCompositeOperation='source-over';
+ ctx.globalAlpha=1;
+
+ // 6. Perspective Glowing Arena Floor
+ const fl=ctx.createLinearGradient(0,242,0,H);
+ fl.addColorStop(0,'#170d26');fl.addColorStop(1,'#07040e');
+ ctx.fillStyle=fl;ctx.fillRect(0,242,W,H-242);
+ ctx.fillStyle='#ff8d3a99';ctx.fillRect(0,242,W,2);
+ ctx.strokeStyle='rgba(168,85,247,0.22)';ctx.lineWidth=1;
+ for(let i=-4;i<=4;i++){ctx.beginPath();ctx.moveTo(240+i*42,244);ctx.lineTo(240+i*98,H);ctx.stroke()}
+ ctx.restore();
+}
+function drawEpicTitleLogo(y,size=22){
+ ctx.save();
+ const glint=((clock*1.4)%2.6)-0.8;
+ // Subtle crimson-gold glow behind title
+ ctx.shadowColor='#ff6a2b';ctx.shadowBlur=16;
+ text('SHINOBI',152,y,size,'#ffb347','center');
+ ctx.shadowColor='#a855f7';ctx.shadowBlur=18;
+ text('SOUL REAPER',342,y,size,'#e9d5ff','center');
+ // Blazing central 'X' clash emblem
+ ctx.shadowColor='#fff2a8';ctx.shadowBlur=14;
+ text('×',228,y,size+4,'#fff2a8','center');
+ ctx.shadowBlur=0;
+ // Sweeping metallic katana glint line across logo
+ const gx=70+glint*340;
+ if(gx>60&&gx<420){
+  ctx.globalCompositeOperation='lighter';
+  ctx.strokeStyle='rgba(255,255,255,0.65)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(gx-16,y+10);ctx.lineTo(gx+16,y-10);ctx.stroke();
+  ctx.globalCompositeOperation='source-over';
+ }
+ // Ornate glowing divider bar
+ const dg=ctx.createLinearGradient(75,0,405,0);
+ dg.addColorStop(0,'rgba(168,85,247,0)');
+ dg.addColorStop(0.25,'#a855f7');
+ dg.addColorStop(0.5,'#ffd24c');
+ dg.addColorStop(0.75,'#ff6a2b');
+ dg.addColorStop(1,'rgba(255,106,43,0)');
+ ctx.fillStyle=dg;ctx.fillRect(75,y+22,330,2);
+ ctx.restore();
+}
+function drawIntro(){
+ const t=introTime,progress=Math.min(1,t/3.2),reveal=Math.min(1,t/.65);
+ drawEpicArenaBackdrop(t);
+ // Cinematic letterbox bars with glowing trim
+ rect(0,0,W,20,'#06040ce6');rect(0,20,W,1.5,'#ff8d3a88');
+ rect(0,H-20,W,20,'#06040ce6');rect(0,H-21,W,1.5,'#a855f788');
+ // Heroic Title Logo
+ drawEpicTitleLogo(50,21);
+ text('PIXEL ARENA  ·  SOUL CLASH EDITION',240,65,7,'#a5f3fc','center');
+ // Giant Vivid Showcase Fighters sliding into battle stance!
+ const slide=(1-Math.pow(1-reveal,3))*48;
+ ctx.save();
+ // Left aura (Dark King purple-crimson glow)
+ const lg=ctx.createRadialGradient(118-48+slide,182,8,118-48+slide,182,64);
+ lg.addColorStop(0,'rgba(147,51,234,0.48)');lg.addColorStop(1,'rgba(147,51,234,0)');
+ ctx.fillStyle=lg;ctx.beginPath();ctx.arc(118-48+slide,182,64,0,Math.PI*2);ctx.fill();
+ // Right aura (Silver Flash cyan-violet glow)
+ const rg=ctx.createRadialGradient(362+48-slide,182,8,362+48-slide,182,64);
+ rg.addColorStop(0,'rgba(56,189,248,0.45)');rg.addColorStop(1,'rgba(56,189,248,0)');
+ ctx.fillStyle=rg;ctx.beginPath();ctx.arc(362+48-slide,182,64,0,Math.PI*2);ctx.fill();
+ // Render full-opacity 1.55x fighters
+ ctx.save();ctx.translate(118-48+slide,236);ctx.scale(1.55,1.55);drawFighter({x:0,y:0,char:1,face:1,vx:0},true);ctx.restore();
+ ctx.save();ctx.translate(362+48-slide,236);ctx.scale(1.55,1.55);drawFighter({x:0,y:0,char:0,face:-1,vx:0},true);ctx.restore();
+ // Center Rotating Arcane Clash Ring + VS Emblem
+ ctx.globalCompositeOperation='lighter';
+ ctx.strokeStyle='#c084fc';ctx.lineWidth=2;ctx.beginPath();ctx.arc(240,164,28+Math.sin(t*6)*3,t*2,t*2+Math.PI*1.4);ctx.stroke();
+ ctx.strokeStyle='#ffb347';ctx.lineWidth=2;ctx.beginPath();ctx.arc(240,164,22,-t*2.6,-t*2.6+Math.PI*1.3);ctx.stroke();
+ ctx.globalCompositeOperation='source-over';
+ text('VS',240,165,18,'#fff3c4','center');
+ ctx.restore();
+ // Sleek Plasma Loading Bar
+ text(t<2.7?'ĐANG TRIỆU HỒI ĐẤU TRƯỜNG...':'SẴN SÀNG CHIẾN ĐẤU!',240,247,7.5,'#fef0c7','center');
+ rect(108,256,264,7,'#110c20');
+ ctx.strokeStyle='#a855f788';ctx.lineWidth=1;ctx.strokeRect(108.5,256.5,263,6);
+ const bg=ctx.createLinearGradient(110,0,370,0);
+ bg.addColorStop(0,'#9333ea');bg.addColorStop(0.6,'#ff5e3a');bg.addColorStop(1,'#ffd24c');
+ ctx.fillStyle=bg;ctx.fillRect(110,258,260*progress,3);
+ if(progress>0.02){ctx.fillStyle='#ffffff';ctx.fillRect(108+260*progress,256,4,7)}
+ text('NHẤN PHÍM BẤT KỲ ĐỂ BỎ QUA',240,290,5.5,'#cbd5e1','center');
+}
+function drawMenu(){
+ drawEpicArenaBackdrop(clock);
+ // Dramatic Hero Guardians flanking the Main Menu (Left: Vua Bóng Tối, Right: Tia Chớp Bạc)
+ ctx.save();
+ const pulse=.5+.5*Math.sin(clock*3.2);
+ // Left Hero Aura (Vua Bóng Tối)
+ const la=ctx.createRadialGradient(68,186,8,68,186,62);
+ la.addColorStop(0,`rgba(147,51,234,${0.38+pulse*0.14})`);la.addColorStop(1,'rgba(147,51,234,0)');
+ ctx.fillStyle=la;ctx.beginPath();ctx.arc(68,186,62,0,Math.PI*2);ctx.fill();
+ ctx.save();ctx.translate(66,242);ctx.scale(1.48,1.48);drawFighter({x:0,y:0,char:1,face:1,vx:0},true);ctx.restore();
+ // Right Hero Aura (Tia Chớp Bạc)
+ const ra=ctx.createRadialGradient(412,186,8,412,186,62);
+ ra.addColorStop(0,`rgba(56,189,248,${0.36+pulse*0.14})`);ra.addColorStop(1,'rgba(56,189,248,0)');
+ ctx.fillStyle=ra;ctx.beginPath();ctx.arc(412,186,62,0,Math.PI*2);ctx.fill();
+ ctx.save();ctx.translate(414,242);ctx.scale(1.48,1.48);drawFighter({x:0,y:0,char:0,face:-1,vx:0},true);ctx.restore();
+ ctx.restore();
+
+ // Heroic Glowing Title Header
+ drawEpicTitleLogo(44,22);
+ text('PIXEL ARENA  ·  SOUL CLASH EDITION',240,59,7,'#a5f3fc','center');
+
+ // Sleek Glassmorphic / Slanted Anime Menu Buttons (preserving exact y = 111 + i*23 hitboxes!)
+ for(let i=0;i<menuItems.length;i++){
+  const y=111+i*23,active=i===menuIndex,bx=active?113:119,bw=active?254:242;
+  ctx.save();
+  // Slanted parallelogram silhouette
+  ctx.beginPath();ctx.moveTo(bx+6,y-9);ctx.lineTo(bx+bw,y-9);ctx.lineTo(bx+bw-6,y+9);ctx.lineTo(bx,y+9);ctx.closePath();
+  if(active){
+   const ag=ctx.createLinearGradient(bx,y-9,bx+bw,y+9);
+   ag.addColorStop(0,'rgba(147,51,234,0.88)');
+   ag.addColorStop(0.55,'rgba(190,24,78,0.92)');
+   ag.addColorStop(1,'rgba(249,115,22,0.88)');
+   ctx.fillStyle=ag;ctx.shadowColor='#ff6b4a';ctx.shadowBlur=12;ctx.fill();ctx.shadowBlur=0;
+   ctx.strokeStyle='#ffd24c';ctx.lineWidth=1.5;ctx.stroke();
+   // Animated glowing energy edge bar + sweeping glint
+   ctx.fillStyle='#ffd24c';ctx.fillRect(bx+3,y-8,4,16);
+   const sweep=((clock*1.8)%1.6)-0.3;
+   if(sweep>0&&sweep<1){ctx.fillStyle='rgba(255,255,255,0.28)';ctx.fillRect(bx+sweep*bw,y-8,18,16)}
+   text('▶',bx+14+Math.sin(clock*10)*2,y,8.5,'#fff4b8');
+   text('◀',bx+bw-14-Math.sin(clock*10)*2,y,8.5,'#fff4b8');
+  }else{
+   ctx.fillStyle='rgba(12,10,26,0.78)';ctx.fill();
+   ctx.strokeStyle='rgba(139,92,246,0.38)';ctx.lineWidth=1;ctx.stroke();
+  }
+  ctx.restore();
+  text(menuItems[i],240,y,active?10.5:9.5,active?'#fff9db':'#cbd5e1','center');
+ }
+
+ // Bottom Control Pill Bar
+ rect(34,271,412,17,'rgba(8,6,18,0.82)');
+ ctx.strokeStyle='rgba(168,85,247,0.45)';ctx.lineWidth=1;ctx.strokeRect(34.5,271.5,411,16);
+ text('P1: W A S D · J/K/I/U/O/L     |     P2: MŨI TÊN · NUMPAD',240,280,6.5,'#a5f3fc','center');
+ if(adminModActive)text('⚡ ADMIN MOD: ON',240,83,7,'#ff626b','center');
+}
 function drawSelect(){drawStage();rect(0,0,W,H,'#080c18bb');panel(14,12,452,276);text(selectMode==='rpg'?(rpgPartySize===1?'CHỌN NHÂN VẬT · SOLO':'CHỌN ĐỘI PHIÊU LƯU'):'CHỌN CHIẾN BINH',240,29,17,'#ff9748','center');if(selectMode==='pvp'&&pvpSet&&!pvpSet.complete)text('TỈ SỐ SET  ·  P1 '+pvpSet.score[0]+' - '+pvpSet.score[1]+' P2  ·  HIỆP '+pvpSet.round,240,41,7,'#fff0bd','center');text('P1: A / D CHỌN · J XÁC NHẬN',20,51,7,'#ffd09a');text(selectMode==='rpg'&&rpgPartySize===1?'P2 KHÔNG THAM GIA':'P2: ← / → CHỌN · NUM1 XÁC NHẬN',460,51,7,'#a2ecff','right');
  for(let side=0;side<2;side++){const x=side===0?25:249;rect(x,62,206,199,side===0?'#291a29':'#172837');text(side===0?'PLAYER 1':'PLAYER 2',x+103,74,9,side===0?'#ff8d72':'#72dfff','center');for(let j=0;j<4;j++){const id=j,cy=101+j*39,active=select[side]===id;rect(x+9,cy-16,188,34,active?(side===0?'#572d35':'#19475a'):'#252737');if(active){rect(x+9,cy-16,3,34,side===0?'#ff7940':'#44e8ff');rect(x+194,cy-16,3,34,side===0?'#ff7940':'#44e8ff')}avatar(x+29,cy-13,id,.43);text(chars[id].name,x+48,cy-7,6.5,active?'#fff':'#b7c1cd');text(chars[id].desc.slice(0,25),x+48,cy+3,5,'#b2c8cf');text(locked[side]&&active?'READY':'PICK',x+48,cy+12,5,locked[side]&&active?'#a9ffb0':'#ffd279') }}
  text(selectMode==='rpg'?(rpgPartySize===1?'J ĐỂ BẮT ĐẦU PHIÊU LƯU':'CHỌN 2 NHÂN VẬT ĐỂ CÙNG PHIÊU LƯU'):'J / NUM1 ĐỂ KHÓA LỰA CHỌN',240,274,8,'#f4d4a0','center');if((selectMode==='rpg'&&rpgPartySize===1&&locked[0])||(locked[0]&&locked[1])){rect(185,264,110,18,'#b94d32');text('BẮT ĐẦU!',240,273,8,'#fff','center')}}
@@ -918,7 +1110,63 @@ function drawRpg(){const map=rpgMaps[rpg.zone],cam=rpg.camera,bgArt=getGameArt("
 const loadingTipsFight=['Mỗi nhân vật có bộ kỹ năng riêng: I, U, O.','Dùng L để lướt né đòn và áp sát đối thủ.','Canh thời điểm tung chiêu để tạo combo hiệu quả.','P1: A/D di chuyển, K nhảy, J đánh. P2: phím mũi tên và Numpad.'];
 const loadingTipsRpg=['A/D di chuyển · K nhảy · J đánh thường.','I, U, O dùng kỹ năng; L lướt để tránh đòn.','Hạ quái để nhận EXP và lên cấp.','Đánh bại boss để mở cổng sang khu kế tiếp.','Đứng gần cổng rồi bước vào để chuyển khu vực.'];
 function updateLoadingScreen(dt){if(!loadingScreen)return;if(loadingScreen.phase==='opening'){loadingScreen.openElapsed+=dt;if(loadingScreen.openElapsed>=.85)loadingScreen=null;return}if(loadingScreen.phase==='complete'){loadingScreen.completeElapsed+=dt;if(loadingScreen.completeElapsed<.35)return;const next=loadingScreen.nextRound,target=loadingScreen.targetScreen;if(next){startPvpRound(0);loadingScreen={phase:'opening',openElapsed:0,mode:'fight'};return}else if(target==='select'){pvpSet=null;game=null;selectMode='pvp';training=false;locked=[false,false];screen='select'}else if(target)screen=target;loadingScreen.phase='opening';loadingScreen.openElapsed=0;loadingScreen.nextRound=false;loadingScreen.targetScreen=null;return}loadingScreen.elapsed+=dt;if(loadingScreen.elapsed>=loadingScreen.duration){loadingScreen.elapsed=loadingScreen.duration;loadingScreen.phase='complete';loadingScreen.completeElapsed=0}}
-function drawLoadingScreen(){if(!loadingScreen)return;if(loadingScreen.phase==='opening'){const k=Math.min(1,loadingScreen.openElapsed/.85),w=240*(1-k),grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,'#6242aa');grad.addColorStop(.5,'#21192e');grad.addColorStop(1,'#c45e37');ctx.fillStyle=grad;ctx.fillRect(0,0,w,H);ctx.fillRect(W-w,0,w,H);ctx.fillStyle='#ffe29b';ctx.globalAlpha=1-k;ctx.fillRect(240-w,0,2,H);ctx.fillRect(238+w,0,2,H);for(let i=0;i<16;i++){const a=clock*1.7+i*Math.PI/8,r=10+i*12,x=240+Math.cos(a)*r,y=150+Math.sin(a)*r;ctx.fillStyle=i%2?'#9cf1e4':'#ffc76d';ctx.globalAlpha=(1-k)*.8;ctx.fillRect(x,y,2,2)}ctx.save();ctx.globalAlpha=(1-k)*.9;ctx.strokeStyle='#a7f4e9';ctx.lineWidth=3;ctx.shadowColor='#8df3e0';ctx.shadowBlur=18;ctx.beginPath();ctx.ellipse(240,150,18+k*250,12+k*145,0,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='#ffcf79';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(240,150,10+k*190,7+k*108,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=(1-k)*.9;text(loadingScreen.welcome?'CHÀO MỪNG':'BẮT ĐẦU!',240,151,12,'#fff3c7','center');ctx.restore();ctx.globalAlpha=1;return}const t=loadingScreen.elapsed,duration=loadingScreen.duration||8,progress=Math.min(1,t/duration),reveal=Math.min(1,t/.85),split=240+Math.sin(clock*1.2)*16;ctx.save();const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#100d27');bg.addColorStop(.52,'#1d2535');bg.addColorStop(1,'#3c211f');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(split+24,0);ctx.lineTo(split-35,H);ctx.lineTo(0,H);ctx.closePath();ctx.fillStyle='#6442aa';ctx.globalAlpha=.48;ctx.fill();ctx.beginPath();ctx.moveTo(W,0);ctx.lineTo(split+24,0);ctx.lineTo(split-35,H);ctx.lineTo(W,H);ctx.closePath();ctx.fillStyle='#c45e37';ctx.fill();ctx.globalAlpha=1;for(let i=0;i<48;i++){const x=(i*89+Math.sin(clock*2+i)*13)%W,y=(i*47+clock*(18+i%4)*3)%H;ctx.fillStyle=i%2?'#b69aff':'#ffbd68';ctx.globalAlpha=.25+(i%5)*.1;ctx.fillRect(x,y,2+i%2,2)}ctx.globalAlpha=1;ctx.save();ctx.beginPath();ctx.rect(W*(1-reveal)/2,0,W*reveal,H);ctx.clip();panel(31,25,418,247);rect(31,25,418,3,'#ff9148');text('SHINOBI  ×  SOUL REAPER',240,59,17,'#ff9b53','center');text(loadingScreen.mode==='rpg'?'PHIÊU LƯU · '+rpgMaps[rpg?.zone||0].name:loadingScreen.mode==='home'?'TRỞ VỀ SẢNH CHÍNH':loadingScreen.mode==='select'?'CHUẨN BỊ CHỌN TƯỚNG':'PIXEL ARENA · LOCAL PVP',240,77,7,'#a9e8ec','center');const hero={x:240-66*reveal,y:204,char:loadingScreen.mode==='rpg'?(select[0]||0):select[0],face:1,vx:0},rival={x:240+66*reveal,y:204,char:loadingScreen.mode==='rpg'?(select[1]||2):select[1],face:-1,vx:0};ctx.globalAlpha=.65;drawFighter(hero,true);drawFighter(rival,true);ctx.globalAlpha=1;for(let i=0;i<10;i++){const a=clock*1.6+i*Math.PI/5,x=240+Math.cos(a)*(20+i%3*7),y=131+Math.sin(a)*(14+i%3*5);ctx.fillStyle=i%2?'#9cf1e4':'#ffc76d';ctx.fillRect(x,y,3,3)}text(loadingScreen.phase==='complete'?'TẢI HOÀN TẤT · ĐANG MỞ CỔNG':loadingScreen.mode==='home'?'ĐANG TẢI MÀN HÌNH CHÍNH':loadingScreen.mode==='select'?'ĐANG TẢI SẢNH CHỌN TƯỚNG':loadingScreen.nextRound?'CHUẨN BỊ HIỆP '+pvpSet.round:'ĐANG NẠP TRẬN ĐẤU',240,230,8,'#fff0d0','center');rect(112,239,256,7,'#292638');rect(114,241,252*progress,3,'#ff964b');text(Math.floor(progress*100)+'%',240,256,6,'#c4d3df','center');const tips=loadingScreen.mode==='rpg'?loadingTipsRpg:loadingTipsFight,tip=tips[Math.min(tips.length-1,Math.floor(t/1.6))];rect(42,273,396,2,'#bd6951');text('GỢI Ý CÁCH CHƠI',240,281,6,'#ffcf82','center');text(tip,240,294,6,'#e5edf0','center');ctx.restore();ctx.restore()}
+function drawLoadingScreen(){
+ if(!loadingScreen)return;
+ if(loadingScreen.phase==='opening'){
+  const k=Math.min(1,loadingScreen.openElapsed/.85),w=240*(1-k);
+  const grad=ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0,'#2e1065');grad.addColorStop(.5,'#0b0718');grad.addColorStop(1,'#7c2d12');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,w,H);ctx.fillRect(W-w,0,w,H);
+  ctx.fillStyle='#ffd24c';ctx.globalAlpha=1-k;ctx.fillRect(240-w,0,3,H);ctx.fillRect(237+w,0,3,H);
+  ctx.save();ctx.globalAlpha=(1-k)*.95;ctx.globalCompositeOperation='lighter';
+  ctx.strokeStyle='#68f0ff';ctx.lineWidth=3.5;ctx.shadowColor='#68f0ff';ctx.shadowBlur=18;
+  ctx.beginPath();ctx.ellipse(240,150,20+k*260,14+k*150,0,0,Math.PI*2);ctx.stroke();
+  ctx.strokeStyle='#ffd24c';ctx.lineWidth=2;
+  ctx.beginPath();ctx.ellipse(240,150,12+k*195,8+k*112,0,0,Math.PI*2);ctx.stroke();
+  ctx.shadowBlur=0;ctx.globalCompositeOperation='source-over';
+  text(loadingScreen.welcome?'CHÀO MỪNG!':'BẮT ĐẦU!',240,151,14,'#fff4c2','center');
+  ctx.restore();ctx.globalAlpha=1;return;
+ }
+ const t=loadingScreen.elapsed,duration=loadingScreen.duration||8,progress=Math.min(1,t/duration),reveal=Math.min(1,t/.75);
+ ctx.save();
+ drawEpicArenaBackdrop(clock);
+ rect(0,0,W,18,'#06040ce6');rect(0,18,W,1.5,'#ff8d3a99');
+ drawEpicTitleLogo(42,19);
+ text(loadingScreen.mode==='rpg'?'PHIÊU LƯU · '+rpgMaps[rpg?.zone||0].name:loadingScreen.mode==='home'?'TRỞ VỀ SẢNH CHÍNH':loadingScreen.mode==='select'?'CHUẨN BỊ CHỌN TƯỚNG':'PIXEL ARENA · LOCAL PVP',240,56,7,'#a5f3fc','center');
+ const p1Char=loadingScreen.mode==='rpg'?(select[0]??1):(select[0]??1);
+ const p2Char=loadingScreen.mode==='rpg'?(select[1]??0):(select[1]??0);
+ const slide=(1-Math.pow(1-reveal,3))*44;
+ // Glowing stage pedestals & 1.5x vivid fighter showcase
+ const lg=ctx.createRadialGradient(124-44+slide,172,6,124-44+slide,172,58);
+ lg.addColorStop(0,'rgba(168,85,247,0.45)');lg.addColorStop(1,'rgba(168,85,247,0)');
+ ctx.fillStyle=lg;ctx.beginPath();ctx.arc(124-44+slide,172,58,0,Math.PI*2);ctx.fill();
+ const rg=ctx.createRadialGradient(356+44-slide,172,6,356+44-slide,172,58);
+ rg.addColorStop(0,'rgba(249,115,22,0.42)');rg.addColorStop(1,'rgba(249,115,22,0)');
+ ctx.fillStyle=rg;ctx.beginPath();ctx.arc(356+44-slide,172,58,0,Math.PI*2);ctx.fill();
+ ctx.save();ctx.translate(124-44+slide,218);ctx.scale(1.48,1.48);drawFighter({x:0,y:0,char:p1Char,face:1,vx:0},true);ctx.restore();
+ ctx.save();ctx.translate(356+44-slide,218);ctx.scale(1.48,1.48);drawFighter({x:0,y:0,char:p2Char,face:-1,vx:0},true);ctx.restore();
+ // Center VS Plasma Emblem
+ ctx.globalCompositeOperation='lighter';
+ ctx.strokeStyle='#68f0ff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(240,148,24+Math.sin(clock*6)*2.5,clock*2.2,clock*2.2+Math.PI*1.4);ctx.stroke();
+ ctx.strokeStyle='#ffd24c';ctx.lineWidth=2;ctx.beginPath();ctx.arc(240,148,18,-clock*2.8,-clock*2.8+Math.PI*1.3);ctx.stroke();
+ ctx.globalCompositeOperation='source-over';
+ text('VS',240,149,16,'#fff3c4','center');
+ // Plasma Progress Bar + Tips
+ text(loadingScreen.phase==='complete'?'TẢI HOÀN TẤT · ĐANG MỞ CỔNG':loadingScreen.mode==='home'?'ĐANG TẢI SẢNH CHÍNH':loadingScreen.mode==='select'?'ĐANG TẢI SẢNH CHỌN TƯỚNG':loadingScreen.nextRound?'CHUẨN BỊ HIỆP '+pvpSet.round:'ĐANG NẠP TRẬN ĐẤU',240,228,8,'#fff0d0','center');
+ rect(108,237,264,7,'#110c20');
+ ctx.strokeStyle='#a855f799';ctx.lineWidth=1;ctx.strokeRect(108.5,237.5,263,6);
+ const pg=ctx.createLinearGradient(110,0,370,0);
+ pg.addColorStop(0,'#9333ea');pg.addColorStop(0.55,'#ff5e3a');pg.addColorStop(1,'#ffd24c');
+ ctx.fillStyle=pg;ctx.fillRect(110,239,260*progress,3);
+ if(progress>0.02){ctx.fillStyle='#ffffff';ctx.fillRect(108+260*progress,237,4,7)}
+ text(Math.floor(progress*100)+'%',240,253,6.5,'#e2e8f0','center');
+ const tips=loadingScreen.mode==='rpg'?loadingTipsRpg:loadingTipsFight,tip=tips[Math.min(tips.length-1,Math.floor(t/1.6))];
+ rect(30,264,420,30,'rgba(8,6,18,0.82)');
+ ctx.strokeStyle='rgba(255,141,58,0.45)';ctx.lineWidth=1;ctx.strokeRect(30.5,264.5,419,29);
+ text('✦ GỢI Ý CHIẾN ĐẤU ✦',240,273,6,'#ffd24c','center');
+ text(tip,240,286,6,'#e5edf0','center');
+ ctx.restore();
+}
 function draw(){clock+=1/60;ctx.clearRect(0,0,W,H);ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();if(screenShakeTimer>0){if(screen==='fight'||screen==='rpg')ctx.translate(Math.round((Math.random()-.5)*screenShakePower),Math.round((Math.random()-.5)*screenShakePower));screenShakeTimer=Math.max(0,screenShakeTimer-1/60);if(!screenShakeTimer)screenShakePower=0}if(screen==='intro')drawIntro();else if(screen==='menu')drawMenu();else if(screen==='admin')drawAdmin();else if(screen==='select')drawSelect();else if(screen==='rpgmode')drawRpgMode();else if(screen==='options')drawOptions();else if(screen==='bindings')drawBindings();else if(screen==='credits')drawInfo('CREDITS',['Pixel art được vẽ bằng Canvas primitives.','Prototype fan-inspired, nhân vật là thiết kế nguyên bản.']);else if(screen==='more')drawInfo('MORE GAMES',['Đây là bản prototype độc lập.','Thêm màn chơi và nhân vật trong các bản sau.']);else if(screen==='fight')drawCombat();else if(screen==='rpg')drawRpg();drawLoadingScreen();drawSceneTransition();if(redFlashTimer>0){ctx.fillStyle='rgba(255,35,48,'+Math.min(.22,redFlashTimer*1.2)+')';ctx.fillRect(0,0,W,H);redFlashTimer=Math.max(0,redFlashTimer-1/60)}ctx.restore()}
 function cycleSelect(side,delta){select[side]=(select[side]+delta+4)%4;locked[side]=false}
 function startSelect(isTraining=false,mode='pvp'){training=isTraining;selectMode=mode;select=[2,0];locked=[false,false];screen='select'}
