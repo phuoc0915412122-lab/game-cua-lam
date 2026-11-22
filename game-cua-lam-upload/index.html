@@ -741,14 +741,201 @@ function drawMenu(){
  text('P1: W A S D · J/K/I/U/O/L     |     P2: MŨI TÊN · NUMPAD',240,280,6.5,'#a5f3fc','center');
  if(adminModActive)text('⚡ ADMIN MOD: ON',240,83,7,'#ff626b','center');
 }
-function drawSelect(){drawStage();rect(0,0,W,H,'#080c18bb');panel(14,12,452,276);text(selectMode==='rpg'?(rpgPartySize===1?'CHỌN NHÂN VẬT · SOLO':'CHỌN ĐỘI PHIÊU LƯU'):'CHỌN CHIẾN BINH',240,29,17,'#ff9748','center');if(selectMode==='pvp'&&pvpSet&&!pvpSet.complete)text('TỈ SỐ SET  ·  P1 '+pvpSet.score[0]+' - '+pvpSet.score[1]+' P2  ·  HIỆP '+pvpSet.round,240,41,7,'#fff0bd','center');text('P1: A / D CHỌN · J XÁC NHẬN',20,51,7,'#ffd09a');text(selectMode==='rpg'&&rpgPartySize===1?'P2 KHÔNG THAM GIA':'P2: ← / → CHỌN · NUM1 XÁC NHẬN',460,51,7,'#a2ecff','right');
- for(let side=0;side<2;side++){const x=side===0?25:249;rect(x,62,206,199,side===0?'#291a29':'#172837');text(side===0?'PLAYER 1':'PLAYER 2',x+103,74,9,side===0?'#ff8d72':'#72dfff','center');for(let j=0;j<4;j++){const id=j,cy=101+j*39,active=select[side]===id;rect(x+9,cy-16,188,34,active?(side===0?'#572d35':'#19475a'):'#252737');if(active){rect(x+9,cy-16,3,34,side===0?'#ff7940':'#44e8ff');rect(x+194,cy-16,3,34,side===0?'#ff7940':'#44e8ff')}avatar(x+29,cy-13,id,.43);text(chars[id].name,x+48,cy-7,6.5,active?'#fff':'#b7c1cd');text(chars[id].desc.slice(0,25),x+48,cy+3,5,'#b2c8cf');text(locked[side]&&active?'READY':'PICK',x+48,cy+12,5,locked[side]&&active?'#a9ffb0':'#ffd279') }}
- text(selectMode==='rpg'?(rpgPartySize===1?'J ĐỂ BẮT ĐẦU PHIÊU LƯU':'CHỌN 2 NHÂN VẬT ĐỂ CÙNG PHIÊU LƯU'):'J / NUM1 ĐỂ KHÓA LỰA CHỌN',240,274,8,'#f4d4a0','center');if((selectMode==='rpg'&&rpgPartySize===1&&locked[0])||(locked[0]&&locked[1])){rect(185,264,110,18,'#b94d32');text('BẮT ĐẦU!',240,273,8,'#fff','center')}}
-function drawRpgMode(){drawStage();rect(0,0,W,H,'#080c18c5');panel(48,40,384,220);text('CHẾ ĐỘ PHIÊU LƯU',240,69,18,'#ff9748','center');text('Chọn cách chơi trước khi vào sảnh nhân vật',240,91,8,'#c9d9df','center');const labels=['MỘT NGƯỜI CHƠI','HAI NGƯỜI CO-OP'];for(let i=0;i<2;i++){const y=132+i*48,active=i===rpgModeIndex;rect(104,y-14,272,31,active?'#57313a':'#232a39');if(active)rect(104,y-14,4,31,'#ff8b42');text(labels[i],240,y,11,active?'#fff0ce':'#bbc7d0','center')}text('← → CHỌN   ENTER XÁC NHẬN   ESC QUAY LẠI',240,224,7,'#a5dce4','center')}
-function drawAdmin(){drawStage();rect(0,0,W,H,'#090d19d0');panel(75,55,330,190);text('ADMINISTRATOR MOD',240,83,15,'#ff9141','center');text('NHẬP MẬT KHẨU ĐỂ '+(adminModActive?'TẮT':'BẬT')+' MOD',240,112,8,'#d5e3e7','center');panel(135,126,210,28);text('• '.repeat(adminPasswordInput.length)+'_',240,144,12,'#fff0c8','center');text(adminMessage||'DÙNG PHÍM SỐ · ENTER XÁC NHẬN',240,176,7,adminMessage?'#ff8b8b':'#9de2e7','center');text('MOD: '+(adminModActive?'ĐANG BẬT':'ĐANG TẮT'),240,201,8,adminModActive?'#ff626b':'#b6c0ca','center');text('ESC: QUAY LẠI',240,224,7,'#ffd28d','center')}
-function drawOptions(){drawStage();rect(0,0,W,H,'#090d19bd');panel(65,31,350,238);text('OPTION',240,55,20,'#ff8b38','center');const rows=[`P1 KEY SET         VIEW`,`P2 KEY SET         VIEW`,`COM LEVEL          ${training?'TRAINING':'OFF'}`,`LIFE               ${opts.life}%`,`TIME               ${opts.time}s`,`QUALITY            ${['LOW','MID','HIGH'][opts.quality]}`];for(let i=0;i<rows.length;i++){const y=91+i*25,active=menuIndex===i;rect(95,y-9,290,18,active?'#4a2931':'#202536');text(rows[i],108,y,9,active?'#fff0d5':'#c0cad4')}text('↑ ↓ CHỌN   ← → THAY ĐỔI   ENTER MỞ   ESC QUAY LẠI',240,247,7,'#9ddde7','center')}
-function drawBindings(){drawStage();rect(0,0,W,H,'#090d19c8');panel(28,18,424,264);text('SƠ ĐỒ ĐIỀU KHIỂN',240,39,16,'#ff9141','center');rect(45,57,184,185,'#24202b');rect(251,57,184,185,'#182934');text('PLAYER 1 · TRÁI',137,71,9,'#ffad75','center');text('PLAYER 2 · PHẢI',343,71,9,'#8feaff','center');const actions=[['Di chuyển','W A S D','MŨI TÊN'],['Đánh thường','J','NUM 1'],['Nhảy','K','NUM 2'],['Kỹ năng 1','I','NUM 4'],['Kỹ năng 2','U','NUM 5'],['Tuyệt kỹ','O','NUM 6'],['Lướt / Dash','L','NUM 3 / 3']];for(let i=0;i<actions.length;i++){const y=91+i*20;text(actions[i][0],53,y,7,'#c6ced7');text(actions[i][1],215,y,8,'#ffd396','right');text(actions[i][0],260,y,7,'#c6ced7');text(actions[i][2],421,y,8,'#91eaff','right')}text('NHẤN ESC ĐỂ QUAY LẠI',240,263,8,'#ffd28d','center')}
-function drawInfo(title,lines){drawStage();rect(0,0,W,H,'#090d19c9');panel(67,62,346,176);text(title,240,91,17,'#ff9141','center');lines.forEach((line,i)=>text(line,240,125+i*17,8,'#d4e2e2','center'));text('ENTER / ESC ĐỂ QUAY LẠI',240,218,8,'#ffd28d','center')}
+function drawGlassPanel(x,y,w,h,accent='#ff8d3a',accent2='#a855f7'){
+ ctx.save();
+ // Deep obsidian translucent glass fill
+ const bg=ctx.createLinearGradient(x,y,x,y+h);
+ bg.addColorStop(0,'rgba(12,9,26,0.88)');
+ bg.addColorStop(0.5,'rgba(16,12,32,0.84)');
+ bg.addColorStop(1,'rgba(9,6,18,0.92)');
+ ctx.fillStyle=bg;ctx.fillRect(x,y,w,h);
+ // Outer subtle glowing border
+ ctx.strokeStyle=accent2+'66';ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,w-1,h-1);
+ // Top & bottom gradient neon trim bars
+ const tg=ctx.createLinearGradient(x,0,x+w,0);
+ tg.addColorStop(0,accent2);tg.addColorStop(0.5,accent);tg.addColorStop(1,accent2);
+ ctx.fillStyle=tg;ctx.fillRect(x,y,w,2.5);
+ ctx.fillStyle=accent2+'88';ctx.fillRect(x,y+h-2,w,2);
+ // Crisp metallic corner energy brackets
+ const cs=10;ctx.strokeStyle='#ffd24c';ctx.lineWidth=1.8;
+ ctx.beginPath();
+ ctx.moveTo(x,y+cs);ctx.lineTo(x,y);ctx.lineTo(x+cs,y);
+ ctx.moveTo(x+w-cs,y);ctx.lineTo(x+w,y);ctx.lineTo(x+w,y+cs);
+ ctx.moveTo(x,y+h-cs);ctx.lineTo(x,y+h);ctx.lineTo(x+cs,y+h);
+ ctx.moveTo(x+w-cs,y+h);ctx.lineTo(x+w,y+h);ctx.lineTo(x+w,y+h-cs);
+ ctx.stroke();
+ ctx.restore();
+}
+function drawSlantedBtn(x,y,w,h,active,c1='#9333ea',c2='#be184e',c3='#f97316'){
+ ctx.save();
+ const sk=6;
+ ctx.beginPath();ctx.moveTo(x+sk,y);ctx.lineTo(x+w,y);ctx.lineTo(x+w-sk,y+h);ctx.lineTo(x,y+h);ctx.closePath();
+ if(active){
+  const ag=ctx.createLinearGradient(x,y,x+w,y+h);
+  ag.addColorStop(0,c1);ag.addColorStop(0.55,c2);ag.addColorStop(1,c3);
+  ctx.fillStyle=ag;ctx.shadowColor=c2;ctx.shadowBlur=12;ctx.fill();ctx.shadowBlur=0;
+  ctx.strokeStyle='#ffd24c';ctx.lineWidth=1.4;ctx.stroke();
+  ctx.fillStyle='#ffd24c';ctx.fillRect(x+3,y+1,3.5,h-2);
+  const sweep=((clock*1.6)%1.8)-0.3;
+  if(sweep>0&&sweep<1){ctx.fillStyle='rgba(255,255,255,0.24)';ctx.fillRect(x+sweep*w,y+1,18,h-2)}
+ }else{
+  ctx.fillStyle='rgba(16,13,34,0.82)';ctx.fill();
+  ctx.strokeStyle='rgba(139,92,246,0.34)';ctx.lineWidth=1;ctx.stroke();
+ }
+ ctx.restore();
+}
+function drawSelect(){
+ drawEpicArenaBackdrop(clock);
+ drawGlassPanel(12,10,456,280,'#ff8d3a','#a855f7');
+ ctx.save();ctx.shadowColor='#ff6a2b';ctx.shadowBlur=12;
+ text(selectMode==='rpg'?(rpgPartySize===1?'CHỌN NHÂN VẬT · SOLO':'CHỌN ĐỘI PHIÊU LƯU'):'CHỌN CHIẾN BINH',240,26,16,'#ffd27a','center');
+ ctx.restore();
+ if(selectMode==='pvp'&&pvpSet&&!pvpSet.complete)text('TỈ SỐ SET  ·  P1 '+pvpSet.score[0]+' - '+pvpSet.score[1]+' P2  ·  HIỆP '+pvpSet.round,240,39,6.5,'#fff0bd','center');
+ text('P1: A / D CHỌN · J KHÓA',22,48,6.5,'#ffb870');
+ text(selectMode==='rpg'&&rpgPartySize===1?'P2 KHÔNG THAM GIA':'P2: ← / → CHỌN · NUM1 KHÓA',458,48,6.5,'#7ef0ff','right');
+ for(let side=0;side<2;side++){
+  const x=side===0?20:250,isP1=side===0,col=isP1?'#ff7b47':'#4de8ff';
+  const colBg=ctx.createLinearGradient(x,56,x,256);
+  colBg.addColorStop(0,isP1?'rgba(58,18,42,0.72)':'rgba(16,42,66,0.72)');
+  colBg.addColorStop(1,'rgba(12,10,24,0.78)');
+  ctx.fillStyle=colBg;ctx.fillRect(x,56,210,200);
+  ctx.strokeStyle=col+'55';ctx.lineWidth=1;ctx.strokeRect(x+.5,56.5,209,199);
+  ctx.fillStyle=col;ctx.fillRect(x,56,210,2);
+  text(isP1?'✦ PLAYER 1 ✦':'✦ PLAYER 2 ✦',x+105,68,8.5,col,'center');
+  for(let j=0;j<4;j++){
+   const id=j,cy=96+j*40,active=select[side]===id,isLocked=locked[side]&&active;
+   drawSlantedBtn(x+7,cy-16,196,35,active,isP1?'#7c2d12':'#164e63',isP1?'#be184e':'#0284c7',isP1?'#ea580c':'#6366f1');
+   // Glowing faction portrait halo behind fighter avatar
+   ctx.save();
+   const ag=ctx.createRadialGradient(x+28,cy+2,2,x+28,cy+2,16);
+   ag.addColorStop(0,chars[id].accent+(active?'88':'44'));ag.addColorStop(1,'rgba(0,0,0,0)');
+   ctx.fillStyle=ag;ctx.beginPath();ctx.arc(x+28,cy+2,16,0,Math.PI*2);ctx.fill();
+   ctx.restore();
+   avatar(x+28,cy-13,id,.44);
+   text(chars[id].name,x+48,cy-8,6.8,active?'#fff9db':'#cbd5e1');
+   text(chars[id].skills.slice(0,2).join(' · '),x+48,cy+2,5.2,active?'#fde68a':'#94a3b8');
+   text(isLocked?'★ READY ★':active?'▶ ĐANG CHỌN':'PICK',x+48,cy+12,5.2,isLocked?'#86efac':active?'#ffffff':'#ffd279');
+  }
+ }
+ // Bottom status / Start banner
+ const readyToGo=(selectMode==='rpg'&&rpgPartySize===1&&locked[0])||(locked[0]&&locked[1]);
+ if(readyToGo){
+  drawSlantedBtn(170,262,140,22,true,'#9333ea','#e11d48','#f59e0b');
+  text('⚔ BẮT ĐẦU! ⚔',240,273,9,'#fffbe6','center');
+ }else{
+  text(selectMode==='rpg'?(rpgPartySize===1?'NHẤN J ĐỂ BẮT ĐẦU PHIÊU LƯU':'CHỌN 2 NHÂN VẬT ĐỂ CÙNG PHIÊU LƯU'):'J / NUM1 ĐỂ KHÓA LỰA CHỌN',240,273,7.5,'#fde68a','center');
+ }
+}
+function drawRpgMode(){
+ drawEpicArenaBackdrop(clock);
+ // Flanking live hero preview
+ ctx.save();
+ ctx.translate(58,236);ctx.scale(1.3,1.3);drawFighter({x:0,y:0,char:1,face:1,vx:0},true);ctx.restore();
+ ctx.save();ctx.translate(422,236);ctx.scale(1.3,1.3);drawFighter({x:0,y:0,char:3,face:-1,vx:0},true);ctx.restore();
+ drawGlassPanel(88,42,304,214,'#ff8d3a','#a855f7');
+ ctx.save();ctx.shadowColor='#ff6a2b';ctx.shadowBlur=12;
+ text('CHẾ ĐỘ PHIÊU LƯU',240,70,16,'#ffd27a','center');
+ ctx.restore();
+ text('Chọn chế độ hành trình trước khi vào sảnh tướng',240,91,6.8,'#a5f3fc','center');
+ const labels=['⚔  MỘT NGƯỜI CHƠI (SOLO)','⚔  HAI NGƯỜI CO-OP (TEAM)'];
+ for(let i=0;i<2;i++){
+  const y=132+i*46,active=i===rpgModeIndex;
+  drawSlantedBtn(112,y-15,256,32,active);
+  if(active){text('▶',126+Math.sin(clock*10)*2,y+1,8.5,'#fff4b8');text('◀',354-Math.sin(clock*10)*2,y+1,8.5,'#fff4b8')}
+  text(labels[i],240,y+1,9.5,active?'#fff9db':'#cbd5e1','center');
+ }
+ text('↑ ↓ / ← → CHỌN   ·   ENTER XÁC NHẬN   ·   ESC QUAY LẠI',240,234,6.2,'#a5f3fc','center');
+}
+function drawAdmin(){
+ drawEpicArenaBackdrop(clock);
+ drawGlassPanel(72,48,336,204,'#f43f5e','#a855f7');
+ ctx.save();ctx.shadowColor='#f43f5e';ctx.shadowBlur=14;
+ text('⚡ ADMINISTRATOR MOD ⚡',240,76,14,'#fda4af','center');
+ ctx.restore();
+ text('NHẬP MẬT KHẨU ĐỂ '+(adminModActive?'TẮT':'BẬT')+' QUYỀN MOD',240,103,7.5,'#e2e8f0','center');
+ // Cyber password terminal slot
+ ctx.save();
+ ctx.fillStyle='rgba(6,4,14,0.92)';ctx.fillRect(130,118,220,30);
+ ctx.strokeStyle=adminModActive?'#4ade80':'#f43f5e';ctx.lineWidth=1.5;ctx.strokeRect(130.5,118.5,219,29);
+ ctx.restore();
+ const cursor=Math.floor(clock*3)%2?'_':' ';
+ text('• '.repeat(adminPasswordInput.length)+cursor,240,134,12,'#fff0c8','center');
+ text(adminMessage||'DÙNG PHÍM SỐ  ·  ENTER XÁC NHẬN',240,168,6.8,adminMessage?'#ff8b8b':'#9de2e7','center');
+ // Status pill
+ rect(166,184,148,20,adminModActive?'rgba(220,38,38,0.35)':'rgba(30,27,54,0.75)');
+ ctx.strokeStyle=adminModActive?'#ff626b':'#64748b';ctx.lineWidth=1;ctx.strokeRect(166.5,184.5,147,19);
+ text('TRẠNG THÁI: '+(adminModActive?'ĐANG BẬT':'ĐANG TẮT'),240,194,7.2,adminModActive?'#ff8089':'#cbd5e1','center');
+ text('ESC: QUAY LẠI SẢNH CHÍNH',240,228,7,'#ffd28d','center');
+}
+function drawOptions(){
+ drawEpicArenaBackdrop(clock);
+ drawGlassPanel(58,24,364,250,'#ff8d3a','#a855f7');
+ ctx.save();ctx.shadowColor='#ff8d3a';ctx.shadowBlur=12;
+ text('⚙  CÀI ĐẶT / OPTION  ⚙',240,48,16,'#ffd27a','center');
+ ctx.restore();
+ const rows=[
+  ['P1 KEY SET','VIEW'],
+  ['P2 KEY SET','VIEW'],
+  ['COM LEVEL',training?'TRAINING':'OFF'],
+  ['LIFE',opts.life+'%'],
+  ['TIME',opts.time+'s'],
+  ['QUALITY',['LOW','MID','HIGH'][opts.quality]]
+ ];
+ for(let i=0;i<rows.length;i++){
+  const y=84+i*26,active=menuIndex===i;
+  drawSlantedBtn(86,y-10,308,21,active);
+  if(active)text('▶',96+Math.sin(clock*10)*1.8,y+1,7.5,'#fff4b8');
+  text(rows[i][0],112,y+1,8.5,active?'#fff9db':'#cbd5e1');
+  // Right-aligned glowing value badge
+  const valCol=active?'#ffd24c':'#7ef0ff';
+  text(active?'◀  '+rows[i][1]+'  ▶':rows[i][1],376,y+1,8.5,valCol,'right');
+ }
+ text('↑ ↓ CHỌN   ·   ← → THAY ĐỔI   ·   ENTER MỞ   ·   ESC QUAY LẠI',240,254,6.4,'#a5f3fc','center');
+}
+function drawBindings(){
+ drawEpicArenaBackdrop(clock);
+ drawGlassPanel(22,14,436,272,'#ff8d3a','#38bdf8');
+ ctx.save();ctx.shadowColor='#38bdf8';ctx.shadowBlur=12;
+ text('⌨  SƠ ĐỒ ĐIỀU KHIỂN  ⌨',240,35,15,'#ffd27a','center');
+ ctx.restore();
+ // P1 & P2 styled glass cards
+ ctx.fillStyle='rgba(58,18,42,0.68)';ctx.fillRect(36,52,194,190);
+ ctx.strokeStyle='#ff7b4766';ctx.lineWidth=1;ctx.strokeRect(36.5,52.5,193,189);
+ ctx.fillStyle='#ff7b47';ctx.fillRect(36,52,194,2);
+ ctx.fillStyle='rgba(16,42,66,0.68)';ctx.fillRect(250,52,194,190);
+ ctx.strokeStyle='#4de8ff66';ctx.lineWidth=1;ctx.strokeRect(250.5,52.5,193,189);
+ ctx.fillStyle='#4de8ff';ctx.fillRect(250,52,194,2);
+ text('PLAYER 1 · TRÁI',133,66,8.5,'#ffb870','center');
+ text('PLAYER 2 · PHẢI',347,66,8.5,'#7ef0ff','center');
+ const actions=[['Di chuyển','W A S D','MŨI TÊN'],['Đánh thường','J','NUM 1'],['Nhảy','K','NUM 2'],['Kỹ năng 1','I','NUM 4'],['Kỹ năng 2','U','NUM 5'],['Tuyệt kỹ','O','NUM 6'],['Lướt / Dash','L','NUM 3 / 3']];
+ for(let i=0;i<actions.length;i++){
+  const y=88+i*22;
+  // Row subtle divider
+  if(i>0){ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fillRect(44,y-11,178,1);ctx.fillRect(258,y-11,178,1)}
+  text(actions[i][0],46,y,6.8,'#e2e8f0');
+  // P1 Keycap badge
+  rect(152,y-7,68,14,'rgba(12,8,24,0.88)');ctx.strokeStyle='#ffb87088';ctx.strokeRect(152.5,y-6.5,67,13);
+  text(actions[i][1],186,y,7,'#ffd27a','center');
+  text(actions[i][0],260,y,6.8,'#e2e8f0');
+  // P2 Keycap badge
+  rect(366,y-7,68,14,'rgba(12,8,24,0.88)');ctx.strokeStyle='#7ef0ff88';ctx.strokeRect(366.5,y-6.5,67,13);
+  text(actions[i][2],400,y,7,'#91eaff','center');
+ }
+ text('NHẤN ESC ĐỂ QUAY LẠI',240,264,7.5,'#ffd28d','center');
+}
+function drawInfo(title,lines){
+ drawEpicArenaBackdrop(clock);
+ drawGlassPanel(54,50,372,196,'#ff8d3a','#a855f7');
+ ctx.save();ctx.shadowColor='#ff8d3a';ctx.shadowBlur=14;
+ text('✦  '+title+'  ✦',240,80,16,'#ffd27a','center');
+ ctx.restore();
+ const dg=ctx.createLinearGradient(110,0,370,0);
+ dg.addColorStop(0,'rgba(168,85,247,0)');dg.addColorStop(0.5,'#ffd24c');dg.addColorStop(1,'rgba(168,85,247,0)');
+ ctx.fillStyle=dg;ctx.fillRect(110,97,260,1.5);
+ lines.forEach((line,i)=>text(line,240,126+i*22,8.2,'#e2e8f0','center'));
+ drawSlantedBtn(136,204,208,24,true,'#6d28d9','#be184e','#ea580c');
+ text('ENTER / ESC ĐỂ QUAY LẠI',240,216,7.5,'#fff9db','center');
+}
 function makePlayer(id,char,x){return{id,char,x,y:FLOOR,vx:0,vy:0,face:id===0?1:-1,hp:opts.life*2,maxHp:opts.life*2,mp:200,maxMp:200,ground:true,dash:0,dashCd:0,rootLock:0,invuln:0,attackCd:0,skillCd:[0,0,0],vanish:0,vanishDone:false,slam:0,stun:0,storm:0,charge:0,chargeTarget:-1,chargeLaunched:false,slow:0,burnStacks:0,burnTimer:0,burnTick:0,basicCombo:0,farCombo:0,silence:0,darkPull:0,darkPullOwner:-1,darkPullStartX:0,voidRush:0,voidRushTarget:-1,voidRushTick:0,voidRushHits:0,voidRushAttacking:false,fireBreath:0,fireBreathTick:0,fireBreathDown:false,fireBreathDX:1,fireBreathDY:0,fireBreathRange:235,fireUlt:0,domainCast:0,domain:0,summonHealStage:0,circleTimer:0,circleTick:0,circleInside:false,summonCast:0,dragonRide:0,dragonRideAge:0,dragonSweep:null,dragonSpin:0,dragonSpinTarget:null,dragonUlt:-1,dragonHandsDone:false,dragonFlightDone:false}}
 function startPvpRound(loadSeconds=0){game={players:[makePlayer(0,select[0],106),makePlayer(1,select[1],374)],skeletons:[],time:120,done:false,winner:-1,round:pvpSet.round,resolved:false};projectiles=[];effects=[];pending=[];particles=[];screen='fight';loadingScreen=loadSeconds?{elapsed:0,duration:loadSeconds,mode:'fight',nextRound:loadSeconds<=3}:null}
 function startMatch(){if(training){pvpSet=null;game={players:[makePlayer(0,select[0],106),makePlayer(1,select[1],374)],skeletons:[],time:opts.time,done:false,winner:-1,resolved:false};projectiles=[];effects=[];pending=[];particles=[];screen='fight';loadingScreen={elapsed:0,duration:5,mode:'fight'};return}if(!pvpSet||pvpSet.complete)pvpSet={score:[0,0],round:1,complete:false};const loadTime=pvpSet.awaitingNext?2:5;pvpSet.awaitingNext=false;startPvpRound(loadTime)}
