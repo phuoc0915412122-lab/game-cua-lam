@@ -37,6 +37,7 @@ window.GAME_ANIMATIONS = {
   },
   3: {
     idle: {frames:[{src:"characters/3/idle_01.png",ms:135},{src:"characters/3/idle_02.png",ms:135},{src:"characters/3/idle_03.png",ms:135},{src:"characters/3/idle_04.png",ms:135},{src:"characters/3/idle_05.png",ms:135},{src:"characters/3/idle_06.png",ms:135}],loop:true,width:64,height:72,offsetY:6},
+    ride: {frames:[{src:"characters/3/ride_01.png",ms:140},{src:"characters/3/ride_02.png",ms:140},{src:"characters/3/ride_03.png",ms:140},{src:"characters/3/ride_04.png",ms:140}],loop:true,width:64,height:72,offsetY:6},
     move: {frames:[{src:"characters/3/move_01.png",ms:75},{src:"characters/3/move_02.png",ms:75},{src:"characters/3/move_03.png",ms:75},{src:"characters/3/move_04.png",ms:75},{src:"characters/3/move_05.png",ms:75},{src:"characters/3/move_06.png",ms:75}],loop:true,width:64,height:72,offsetY:6},
     jump: {frames:[{src:"characters/3/jump_01.png",ms:75},{src:"characters/3/jump_02.png",ms:90},{src:"characters/3/jump_03.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
     fall: {frames:[{src:"characters/3/fall_01.png",ms:95},{src:"characters/3/fall_02.png",ms:95},{src:"characters/3/fall_03.png",ms:110}],loop:true,width:64,height:72,offsetY:6,flip:false},
