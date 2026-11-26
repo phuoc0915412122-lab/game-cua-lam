@@ -56,15 +56,19 @@ window.GAME_ANIMATIONS = {
     defeat: {frames:[{src:"characters/3/defeat_01.png",ms:95},{src:"characters/3/defeat_02.png",ms:105},{src:"characters/3/defeat_03.png",ms:115},{src:"characters/3/defeat_04.png",ms:250}],loop:false,width:64,height:72,offsetY:6,flip:false}
   },
   0: {
-    idle: {frames:[{src:"characters/0/idle_01.png",ms:240},{src:"characters/0/idle_02.png",ms:240}],loop:true,width:64,height:72,offsetY:6},
-    move: {frames:[{src:"characters/0/move_01.png",ms:95},{src:"characters/0/move_02.png",ms:95},{src:"characters/0/move_03.png",ms:95},{src:"characters/0/move_04.png",ms:95}],loop:true,width:64,height:72,offsetY:6},
-    jump: {frames:[{src:"characters/0/jump_01.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
-    fall: {frames:[{src:"characters/0/fall_01.png",ms:160}],loop:true,width:64,height:72,offsetY:6,flip:false},
-    attack: {frames:[{src:"characters/0/attack_01.png",ms:75},{src:"characters/0/attack_02.png",ms:75},{src:"characters/0/attack_03.png",ms:110}],loop:false,width:64,height:72,offsetY:6},
-    skill: {frames:[{src:"characters/0/skill_01.png",ms:110},{src:"characters/0/skill_02.png",ms:100},{src:"characters/0/skill_03.png",ms:140}],loop:false,width:64,height:72,offsetY:6},
-    finisher: {frames:[{src:"characters/0/finisher_01.png",ms:110},{src:"characters/0/finisher_02.png",ms:90},{src:"characters/0/finisher_03.png",ms:160}],loop:false,width:64,height:72,offsetY:6},
-    dash: {frames:[{src:"characters/0/dash_01.png",ms:70},{src:"characters/0/dash_02.png",ms:70}],loop:true,width:64,height:72,offsetY:6},
-    defeat: {frames:[{src:"characters/0/defeat_01.png",ms:200}],loop:false,width:64,height:72,offsetY:6,flip:false}
+    idle: {frames:[{src:"characters/0/idle_01.png",ms:130},{src:"characters/0/idle_02.png",ms:130},{src:"characters/0/idle_03.png",ms:130},{src:"characters/0/idle_04.png",ms:130},{src:"characters/0/idle_05.png",ms:130},{src:"characters/0/idle_06.png",ms:130}],loop:true,width:64,height:72,offsetY:6},
+    move: {frames:[{src:"characters/0/move_01.png",ms:72},{src:"characters/0/move_02.png",ms:72},{src:"characters/0/move_03.png",ms:72},{src:"characters/0/move_04.png",ms:72},{src:"characters/0/move_05.png",ms:72},{src:"characters/0/move_06.png",ms:72}],loop:true,width:64,height:72,offsetY:6},
+    jump: {frames:[{src:"characters/0/jump_01.png",ms:85},{src:"characters/0/jump_02.png",ms:85},{src:"characters/0/jump_03.png",ms:85}],loop:false,width:64,height:72,offsetY:6},
+    fall: {frames:[{src:"characters/0/fall_01.png",ms:95},{src:"characters/0/fall_02.png",ms:95},{src:"characters/0/fall_03.png",ms:95}],loop:true,width:64,height:72,offsetY:6,flip:false},
+    dash: {frames:[{src:"characters/0/dash_01.png",ms:55},{src:"characters/0/dash_02.png",ms:55},{src:"characters/0/dash_03.png",ms:55},{src:"characters/0/dash_04.png",ms:55}],loop:true,width:64,height:72,offsetY:6},
+    hit: {frames:[{src:"characters/0/hit_01.png",ms:75},{src:"characters/0/hit_02.png",ms:75},{src:"characters/0/hit_03.png",ms:75}],loop:false,width:64,height:72,offsetY:6},
+    defeat: {frames:[{src:"characters/0/defeat_01.png",ms:135},{src:"characters/0/defeat_02.png",ms:135},{src:"characters/0/defeat_03.png",ms:135},{src:"characters/0/defeat_04.png",ms:135}],loop:false,width:64,height:72,offsetY:6,flip:false},
+    attack: {frames:[{src:"characters/0/attack_01.png",ms:68},{src:"characters/0/attack_02.png",ms:68},{src:"characters/0/attack_03.png",ms:68},{src:"characters/0/attack_04.png",ms:68},{src:"characters/0/attack_05.png",ms:68}],loop:false,width:64,height:72,offsetY:6},
+    skill1: {frames:[{src:"characters/0/skill1_01.png",ms:85},{src:"characters/0/skill1_02.png",ms:85},{src:"characters/0/skill1_03.png",ms:85},{src:"characters/0/skill1_04.png",ms:85}],loop:false,width:64,height:72,offsetY:6},
+    skill2: {frames:[{src:"characters/0/skill2_01.png",ms:75},{src:"characters/0/skill2_02.png",ms:75},{src:"characters/0/skill2_03.png",ms:75},{src:"characters/0/skill2_04.png",ms:75}],loop:false,width:64,height:72,offsetY:6},
+    skill3: {frames:[{src:"characters/0/skill3_01.png",ms:90},{src:"characters/0/skill3_02.png",ms:90},{src:"characters/0/skill3_03.png",ms:90},{src:"characters/0/skill3_04.png",ms:90}],loop:false,width:64,height:72,offsetY:6},
+    skill: {frames:[{src:"characters/0/skill1_01.png",ms:85},{src:"characters/0/skill1_02.png",ms:85},{src:"characters/0/skill1_03.png",ms:85},{src:"characters/0/skill1_04.png",ms:85}],loop:false,width:64,height:72,offsetY:6},
+    finisher: {frames:[{src:"characters/0/skill3_01.png",ms:90},{src:"characters/0/skill3_02.png",ms:90},{src:"characters/0/skill3_03.png",ms:90},{src:"characters/0/skill3_04.png",ms:90}],loop:false,width:64,height:72,offsetY:6}
   }
  },
  projectiles: {
