@@ -106,8 +106,33 @@ const colors={gold:'#ff8b32',red:'#ed493e',cyan:'#49dafa',ink:'#101522',cream:'#
 
 // === WEB AUDIO API SFX ENGINE (NO BGM, NO KO BUZZER) ===
 const SFX=(()=>{
- let ctxA=null,noiseBuf=null,muted=false;
- const lastPlay={};
+ let ctxA=null,noiseBuf=null,muted=false,audioPreloaded=false;
+ const lastPlay={},decodedBufs={};
+ const AUDIO_FILES={
+  silverShot:'game-assets/audio/silver/silver_j.mp4',
+  silverStorm:'game-assets/audio/silver/silver_i.mp4',
+  silverDash:'game-assets/audio/silver/silver_u.mp4',
+  silverUlt:'game-assets/audio/silver/silver_o.mp4',
+  silverStrike:'game-assets/audio/silver/silver_o_strike.mp4'
+ };
+ function preloadFiles(c){
+  if(audioPreloaded)return;
+  audioPreloaded=true;
+  for(const [k,url] of Object.entries(AUDIO_FILES)){
+   fetch(url).then(r=>r.ok?r.arrayBuffer():Promise.reject()).then(ab=>c.decodeAudioData(ab)).then(buf=>{decodedBufs[k]=buf;}).catch(()=>{});
+  }
+ }
+ function playAudioFile(c,name){
+  const url=AUDIO_FILES[name];if(!url)return false;
+  const vol=name==='silverStrike'?0.9:0.88;
+  if(decodedBufs[name]&&c){
+   const s=c.createBufferSource(),g=c.createGain();
+   s.buffer=decodedBufs[name];g.gain.value=vol;
+   s.connect(g);g.connect(c.destination);s.start(0);
+   return true;
+  }
+  try{const a=new Audio(url);a.volume=vol;a.play().catch(()=>{});return true;}catch(e){return false;}
+ }
  function ensure(){
   if(muted)return null;
   if(!ctxA){
@@ -120,6 +145,7 @@ const SFX=(()=>{
    for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
   }
   if(ctxA.state==='suspended')ctxA.resume().catch(()=>{});
+  preloadFiles(ctxA);
   return ctxA;
  }
  function tone(c,type,f0,f1,dur,vol=.16,delay=0){
@@ -145,11 +171,14 @@ const SFX=(()=>{
   srcN.start(t);srcN.stop(t+dur+.02);
  }
  function play(name){
-  const c=ensure();if(!c)return;
+  if(muted)return;
+  const c=ensure();
   const now=performance.now();
-  const minGap=(name==='hit'||name==='heavyHit')?45:30;
+  const minGap=name==='silverStrike'?110:(name==='hit'||name==='heavyHit')?45:30;
   if(lastPlay[name]&&now-lastPlay[name]<minGap)return;
   lastPlay[name]=now;
+  if(AUDIO_FILES[name]){playAudioFile(c,name);return;}
+  if(!c)return;
   switch(name){
    // --- UI & Movement ---
    case 'uiClick':
@@ -322,7 +351,7 @@ function combatFeedback(frames,shake,duration,flash){hitstopTimer=Math.max(hitst
 function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
 function text(s,x,y,size=10,color='#fff',align='left'){ctx.font=`900 ${size}px monospace`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=Math.max(2,size*.24);ctx.strokeStyle='#190f19';ctx.strokeText(s,x,y);ctx.fillStyle=color;ctx.fillText(s,x,y)}
 let particleCursor=0,projectileCursor=0,rpgShotCursor=0;
-function addEffect(item){let warnings=0;for(const e of effects)if(e.type==='warning')warnings++;if(item.type==='warning'&&warnings>=4)return;const cap=opts.quality===0?160:opts.quality===1?320:512;if(effects.length<cap)effects.push(item);else{let i=effects.findIndex(e=>!['hit','warning','burst'].includes(e.type));if(i<0)i=0;effects[i]=item}}
+function addEffect(item){if(item&&item.type==='silverStrike')playSfx('silverStrike');let warnings=0;for(const e of effects)if(e.type==='warning')warnings++;if(item.type==='warning'&&warnings>=4)return;const cap=opts.quality===0?160:opts.quality===1?320:512;if(effects.length<cap)effects.push(item);else{let i=effects.findIndex(e=>!['hit','warning','burst'].includes(e.type));if(i<0)i=0;effects[i]=item}}
 function addParticle(item){const cap=opts.quality===0?128:opts.quality===1?282:512;if(particles.length<cap)particles.push(item);else{particles[particleCursor%particles.length]=item;particleCursor=(particleCursor+1)%cap}}
 function addRpgHostileShot(item){if(!rpg.hostileShots)rpg.hostileShots=[];const cap=128;if(rpg.hostileShots.length<cap)rpg.hostileShots.push(item)}
 function addRpgShot(item){const cap=128;if(rpg.shots.length<cap)rpg.shots.push(item);else{rpg.shots[rpgShotCursor%cap]=item;rpgShotCursor=(rpgShotCursor+1)%cap}}
