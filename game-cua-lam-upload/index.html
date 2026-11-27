@@ -109,29 +109,59 @@ const SFX=(()=>{
  let ctxA=null,noiseBuf=null,muted=false,audioPreloaded=false;
  const lastPlay={},decodedBufs={};
  const AUDIO_FILES={
-  silverShot:'game-assets/audio/silver/silver_j.mp4',
-  silverStorm:'game-assets/audio/silver/silver_i.mp4',
-  silverDash:'game-assets/audio/silver/silver_u.mp4',
-  silverUlt:'game-assets/audio/silver/silver_o.mp4',
-  silverStrike:'game-assets/audio/silver/silver_o_strike.mp4'
+  silverShot:{url:'game-assets/audio/silver/silver_j.mp4',mode:'onset',dur:0.55,vol:0.9,fbStart:0.12},
+  silverStorm:{url:'game-assets/audio/silver/silver_i.mp4',mode:'onset',dur:1.50,vol:0.9,fbStart:0.20},
+  silverDash:{url:'game-assets/audio/silver/silver_u.mp4',mode:'onset',dur:0.85,vol:0.9,fbStart:0.15},
+  silverUlt:{url:'game-assets/audio/silver/silver_o.mp4',mode:'onset',dur:2.60,vol:0.92,fbStart:0.10},
+  silverStrike:{url:'game-assets/audio/silver/silver_o_strike.mp4',mode:'peak',dur:0.95,vol:0.95,fbStart:1.15}
  };
+ // Auto-detect exact sound onset or peak in decoded PCM so every clip fires with 0ms lag and exact skill duration!
+ function analyzeTrim(buf,cfg){
+  const ch=buf.getChannelData(0),sr=buf.sampleRate,n=ch.length;
+  let maxAmp=0,peakIdx=0;
+  for(let i=0;i<n;i++){const v=Math.abs(ch[i]);if(v>maxAmp){maxAmp=v;peakIdx=i;}}
+  if(maxAmp<0.005)return {buf,offset:0,dur:Math.min(buf.duration,cfg.dur)};
+  let startIdx=0;
+  if(cfg.mode==='peak'){
+   // Start right before the main lightning impact transient!
+   const thresh=maxAmp*0.32;
+   let impIdx=peakIdx;
+   for(let i=Math.max(0,peakIdx-Math.floor(sr*0.6));i<=peakIdx;i++){
+    if(Math.abs(ch[i])>=thresh){impIdx=i;break;}
+   }
+   startIdx=Math.max(0,impIdx-Math.floor(sr*0.025));
+  }else{
+   // Skip leading silence cleanly up to first real energy onset
+   const thresh=Math.max(0.03,maxAmp*0.14);
+   for(let i=0;i<n;i++){if(Math.abs(ch[i])>=thresh){startIdx=Math.max(0,i-Math.floor(sr*0.015));break;}}
+  }
+  const offset=startIdx/sr;
+  const dur=Math.min(Math.max(0.15,buf.duration-offset),cfg.dur);
+  return {buf,offset,dur};
+ }
  function preloadFiles(c){
   if(audioPreloaded)return;
   audioPreloaded=true;
-  for(const [k,url] of Object.entries(AUDIO_FILES)){
-   fetch(url).then(r=>r.ok?r.arrayBuffer():Promise.reject()).then(ab=>c.decodeAudioData(ab)).then(buf=>{decodedBufs[k]=buf;}).catch(()=>{});
+  for(const [k,cfg] of Object.entries(AUDIO_FILES)){
+   fetch(cfg.url).then(r=>r.ok?r.arrayBuffer():Promise.reject()).then(ab=>c.decodeAudioData(ab)).then(buf=>{decodedBufs[k]=analyzeTrim(buf,cfg);}).catch(()=>{});
   }
  }
  function playAudioFile(c,name){
-  const url=AUDIO_FILES[name];if(!url)return false;
-  const vol=name==='silverStrike'?0.9:0.88;
-  if(decodedBufs[name]&&c){
-   const s=c.createBufferSource(),g=c.createGain();
-   s.buffer=decodedBufs[name];g.gain.value=vol;
-   s.connect(g);g.connect(c.destination);s.start(0);
+  const cfg=AUDIO_FILES[name];if(!cfg)return false;
+  const item=decodedBufs[name];
+  if(item&&c){
+   const t=c.currentTime,s=c.createBufferSource(),g=c.createGain();
+   s.buffer=item.buf;
+   const fadeOut=Math.min(0.09,item.dur*0.2);
+   g.gain.setValueAtTime(0.001,t);
+   g.gain.linearRampToValueAtTime(cfg.vol,t+0.012);
+   g.gain.setValueAtTime(cfg.vol,t+Math.max(0.02,item.dur-fadeOut));
+   g.gain.exponentialRampToValueAtTime(0.001,t+item.dur);
+   s.connect(g);g.connect(c.destination);
+   s.start(t,item.offset,item.dur+0.02);
    return true;
   }
-  try{const a=new Audio(url);a.volume=vol;a.play().catch(()=>{});return true;}catch(e){return false;}
+  try{const a=new Audio(cfg.url);a.volume=cfg.vol;a.currentTime=cfg.fbStart||0;a.play().catch(()=>{});setTimeout(()=>{try{a.pause();}catch(e){}},Math.round(cfg.dur*1000));return true;}catch(e){return false;}
  }
  function ensure(){
   if(muted)return null;
